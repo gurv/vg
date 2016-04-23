@@ -9,6 +9,8 @@ buildscript {
     }
 }
 
+def metadataProject = project(':metadata')
+
 configure(subprojects) {
 
     apply plugin: 'java'
