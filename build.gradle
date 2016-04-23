@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE"
+    }
+}
+
+configure(subprojects) {
+
+    apply plugin: 'java'
+    apply plugin: 'spring-boot'
+
+    ext {
+        buildNoString = project.hasProperty('buildNo') ? "${buildNo}" : "0.1.0"
+    }
+
+    group = 'ru.gurv.vg'
+    version = buildNoString
+
+    sourceCompatibility = '1.8'
+
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        compile "org.springframework.boot:spring-boot-starter-web"
+        compile "org.springframework:spring-web"
+    }
+}
