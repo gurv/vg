@@ -1,0 +1,15 @@
+<p>ISO 4217</p>
+<ul>
+  <li *ngFor="let iso4217Currency of iso4217Currencies">
+    <span>{{iso4217Currency.alphabeticCode}}</span> {{iso4217Currency.numericCode}}
+  </li>
+</ul>
+<!--
+<ul>
+  <li *ngFor="let iso4217Currency of iso4217Currencies"
+      [class.selected]="metadata === selectedMetadata"
+      (click)="onSelect(metadata)">
+    <span class="badge">{{metadata.id}}</span> {{metadata.name}}
+  </li>
+</ul>
+-->

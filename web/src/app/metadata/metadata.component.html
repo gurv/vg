@@ -1,0 +1,16 @@
+<!--
+<md-grid-list cols="1">
+  <md-grid-tile *ngFor="let metadata of metadataArray">
+    [class.selected]="metadata === selectedMetadata"
+    (click)="onSelect(metadata)">
+    <span class="badge">{{metadata.id}}</span> {{metadata.name}}
+  </md-grid-tile>
+</md-grid-list>
+-->
+<ul class="heroes">
+  <li *ngFor="let metadata of metadataArray"
+      [class.selected]="metadata === selectedMetadata"
+      (click)="onSelect(metadata)">
+    <span class="badge">{{metadata.id}}</span> {{metadata.name}}
+  </li>
+</ul>
