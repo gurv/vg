@@ -7,6 +7,7 @@ import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {Observable} from "rxjs";
 import {CbrCurrencyRate} from "./cbr-currency-rate";
+import {CbrCurrency} from "./cbr-currency";
 
 @Injectable()
 export class CbrCurrencyRateService {
@@ -18,6 +19,17 @@ export class CbrCurrencyRateService {
 
   getCurrencyRates(): Observable<any> {
     return this.http.get('/scripts/XML_daily.asp')
+      .do(res => console.log("result: ", res))
+      .do(res => console.log('parse: ', this.xml2CurrencyRates(res.text())))
+      .map((data) =>
+        this.data = data
+      );
+  }
+
+  getCurrencyRatesByCurrencyAndDateRange(cbrCurrency: CbrCurrency,
+                                         beginDate: Date,
+                                         endDate: Date): Observable<any> {
+    return this.http.get('/scripts/XML_dynamic.asp')
       .do(res => console.log("result: ", res))
       .do(res => console.log('parse: ', this.xml2CurrencyRates(res.text())))
       .map((data) =>

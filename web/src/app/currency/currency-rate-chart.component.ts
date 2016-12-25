@@ -1,49 +1,87 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CbrCurrencyService} from "./cbr-currency/cbr-currency.service";
-import {CbrCurrencyRateService} from './cbr-currency/cbr-currency-rate.service'
-import {Iso4217CurrencyService} from "./iso-4217-cuurency/iso-4217-currency.service";
+import {CbrCurrencyRateDynamicService} from "./cbr-currency/cbr-currency-rate-dynamic.service";
+import {CbrCurrency} from "./cbr-currency/cbr-currency";
+import {CbrCurrencyRate} from "./cbr-currency/cbr-currency-rate";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'currency-rate-chart',
   templateUrl: 'currency-rate-chart.component.html',
   styleUrls: ['currency-rate-chart.component.css'],
-  providers: [Iso4217CurrencyService, CbrCurrencyService, CbrCurrencyRateService]
+  providers: [CbrCurrencyService, CbrCurrencyRateDynamicService]
 })
-export class CurrencyRateChartComponent {
+export class CurrencyRateChartComponent implements OnInit {
+
+  currency : CbrCurrency = new CbrCurrency('R01235', '', '', '', '840', 'USD', 1);
+  beginDate: Date = new Date('2015-12-01');
+  endDate: Date = new Date('2017-01-01');
+  currencies: CbrCurrency[] = [
+    new CbrCurrency('R01235', '', '', '', '840', 'USD', 1),
+    new CbrCurrency('R01239', '', '', '', '978', 'EUR', 1),
+    new CbrCurrency('R01035', '', '', '', '826', 'GBP', 1),
+    new CbrCurrency('R01820', '', '', '', '392', 'JPY', 1)
+    ];
 
   columnChartOptions = {
-    chartType: 'AreaChart',
-    dataTable: [
-      ['Дата', 'USD', 'EUR'],
-      ['01.01.2016', 60, 70],
-      ['01.02.2016', 62, 73],
-      ['01.03.2016', 65, 77],
-      ['01.04.2016', 70, 80],
-      ['01.05.2016', 64, 74],
-      ['01.06.2016', 65, 75]
-    ]
+    chartType: 'LineChart',
+    dataTable: []
   };
 
-/*
-  constructor(private cbrCurrencyRateService: CbrCurrencyRateService) {
-    this.cbrCurrencyRateService.getCurrencyRates()
-      .subscribe(result => console.log(result));
-  }
-*/
-
-  constructor(private cbrCurrencyService: CbrCurrencyService) {
-    this.cbrCurrencyService.getCurrencies()
-      .subscribe();
+  constructor(private cbrCurrencyRateDynamicService: CbrCurrencyRateDynamicService) {
   }
 
-  myClick() {
-    this.columnChartOptions = Object.create(this.columnChartOptions);
-    for (let i = 1; i < 7; i++) {
-      this.columnChartOptions.dataTable[i][1] = Math.round(
-        Math.random() * 1000);
-      this.columnChartOptions.dataTable[i][2] = Math.round(
-        Math.random() * 1000);
+  ngOnInit(): void {
+    this.getData();
+  }
+
+  getData(): void {
+    // Подготовка пакета запросов курсов валют
+    let batch: Array<Observable<CbrCurrencyRate[]>> = [];
+    for (let i = 0; i < this.currencies.length; i++) {
+      batch.push(
+        this.cbrCurrencyRateDynamicService.getCurrencyRates(
+          this.currencies[i],
+          this.beginDate,
+          this.endDate));
     }
+
+    // Запрос и обработка курсов валют
+    Observable.zip.apply(null, batch)
+        .subscribe(
+          data => {
+            // Таблица графика
+            let chartTable: (string | number)[][] = [];
+
+            // Заполнение первой строки таблицы, которая содержит заголовок дат и валют
+            let firstRow: (string)[] = [];
+            firstRow.push('Дата');
+            for (let i = 0; i < data.length; i++) {
+              let idx: number = this.currencies.findIndex(currency => currency.id == data[i][0].cbrCurrencyId);
+              firstRow.push(this.currencies[idx].isoCharCode);
+            }
+            chartTable.push(firstRow);
+
+            // Заполнение таблицы данными курсов валют
+            if (data.length > 0) {
+              for (let r = 0; r < data[0].length; r++) {
+                let row: (string | number)[] = [];
+                for (let c = 0; c < data.length; c++) {
+                  let rate: CbrCurrencyRate = data[c][r];
+                  if (c == 0) {
+                    row.push(rate.date.toLocaleDateString());
+                  }
+                  row.push(rate.value);
+                }
+                chartTable.push(row);
+              }
+            }
+            console.debug('Подготовлена таблица данных графика курсов валют');
+
+            this.columnChartOptions = Object.create(this.columnChartOptions);
+            this.columnChartOptions.dataTable = chartTable;
+          }
+        );
   }
 
 }
