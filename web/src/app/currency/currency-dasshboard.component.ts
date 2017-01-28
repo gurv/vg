@@ -7,7 +7,7 @@ import {Component, OnInit} from '@angular/core';
 export class CurrencyDashboardComponent implements OnInit {
 
   ngOnInit() {
-    console.log('Инициализация компонента `CurrencyRateDashboard`');
+    console.log('Инициализация компонента `CurrencyDashboard`');
   }
 
 }
