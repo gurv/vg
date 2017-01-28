@@ -4,17 +4,28 @@ buildscript {
         jcenter()
         mavenCentral()
     }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE"
+}
+
+plugins {
+    id 'org.springframework.boot' version '1.4.3.RELEASE'
+}
+
+def databaseProject = project(':database')
+def webProject = project(':web')
+
+configure(rootProject) {
+
+    ext {
+        dockerTaskGroup = 'Docker'
+    }
+
+    task upDockerCompose(type: Exec) {
+        group = rootProject.dockerTaskGroup
+        commandLine "docker-compose", "up"
     }
 }
 
-def metadataProject = project(':metadata')
-
 configure(subprojects) {
-
-    apply plugin: 'java'
-    apply plugin: 'spring-boot'
 
     ext {
         buildNoString = project.hasProperty('buildNo') ? "${buildNo}" : "0.1.0"
@@ -22,6 +33,33 @@ configure(subprojects) {
 
     group = 'ru.gurv.vg'
     version = buildNoString
+}
+
+configure(subprojects - databaseProject) {
+
+    task pushDockerImage(type: Exec) {
+        group = rootProject.dockerTaskGroup
+        commandLine "docker", "push", "gurv/$rootProject.name-$project.name"
+    }
+
+    task runDockerImage(type: Exec) {
+        group = rootProject.dockerTaskGroup
+        if (project.hasProperty("dockerPort")) {
+            commandLine "docker", "run", "-i", "-p", "$project.dockerPort:$project.dockerPort", "gurv/$rootProject.name-$project.name:$version"
+        } else {
+            commandLine "docker", "run", "-i", "gurv/$rootProject.name-$project.name:$version"
+        }
+    }
+}
+
+configure(subprojects - webProject - databaseProject) {
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+
+    jar {
+        baseName = rootProject.name + '-' + baseName
+    }
 
     sourceCompatibility = '1.8'
 
@@ -34,4 +72,96 @@ configure(subprojects) {
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "org.springframework:spring-web"
     }
+
+    task buildDockerImage(type: Exec) {
+        dependsOn build
+        group = rootProject.dockerTaskGroup
+
+        def dockerDir = "$project.buildDir/docker"
+
+        commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name:latest", "$dockerDir"
+
+        doFirst {
+            copy {
+                from('src/main/docker') {
+                    include 'Dockerfile'
+                }
+                from("$project.buildDir/libs") {
+                    include "$jar.archiveName"
+                }
+                into "$dockerDir"
+                rename("$jar.archiveName", 'app.jar')
+            }
+        }
+    }
 }
+
+class Dockerfile extends DefaultTask {
+
+    def dockerfileInfo = ""
+    def dockerDir = "$project.buildDir/docker"
+    def dockerfileDestination = "$project.buildDir/docker/Dockerfile"
+    def filesToCopy = []
+
+    File getDockerfileDestination() {
+        project.file(dockerfileDestination)
+    }
+
+    def from(image = "java") {
+        dockerfileInfo += "FROM $image\r\n"
+    }
+
+    def maintainer(contact) {
+        dockerfileInfo += "MAINTAINER $contact\r\n"
+    }
+
+    def add(sourceLocation, targetLocation) {
+        filesToCopy << sourceLocation
+        def file = project.file(sourceLocation)
+        dockerfileInfo += "ADD $file.name ${targetLocation}\r\n"
+    }
+
+    def run(command) {
+        dockerfileInfo += "RUN $command\r\n"
+    }
+
+    def volume(path) {
+        dockerfileInfo += "VOLUME $path\r\n"
+    }
+
+    def env(var, value) {
+        dockerfileInfo += "ENV $var $value\r\n"
+    }
+
+    def expose(port) {
+        dockerfileInfo += "EXPOSE $port\r\n"
+    }
+
+    def workdir(dir) {
+        dockerfileInfo += "WORKDIR $dir\r\n"
+    }
+
+    def cmd(command) {
+        dockerfileInfo += "CMD $command\r\n"
+    }
+
+    def entrypoint(command) {
+        dockerfileInfo += "ENTRYPOINT $command\r\n"
+    }
+
+    @TaskAction
+    def writeDockerfile() {
+        for (fileName in filesToCopy) {
+            def source = project.file(fileName)
+            def target = project.file("$dockerDir/$source.name")
+            target.parentFile.mkdirs()
+            target.delete()
+            target << source.bytes
+        }
+        def file = getDockerfileDestination()
+        file.parentFile.mkdirs()
+        file.write dockerfileInfo
+    }
+
+}
+

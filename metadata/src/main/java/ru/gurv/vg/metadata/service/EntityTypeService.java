@@ -11,4 +11,5 @@ public interface EntityTypeService {
 	 * @return найденный тип сущности
 	 */
 	EntityType findByCode(String entityTypeCode);
+
 }

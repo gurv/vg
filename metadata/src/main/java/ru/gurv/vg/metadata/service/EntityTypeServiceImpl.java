@@ -16,12 +16,10 @@ public class EntityTypeServiceImpl implements EntityTypeService {
 	@Autowired
 	private EntityTypeRepository repository;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public EntityType findByCode(String entityTypeCode) {
 		Assert.hasLength(entityTypeCode);
 		return repository.findByCode(entityTypeCode);
 	}
+
 }
