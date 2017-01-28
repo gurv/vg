@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-import {Iso4217CurrencyListComponent} from "../currency/iso-4217-cuurency/iso-4217-currency-list.component";
+import {Iso4217CurrencyListComponent} from "../currency/iso-4217-currency/iso-4217-currency-list.component";
 import {CurrencyDashboardComponent} from "./currency-dasshboard.component";
 import {CurrencyRateChartComponent} from "./currency-rate-chart.component";
 import {GoogleChartComponent} from "../shared/google-charts/google-chart/google-chart.component";

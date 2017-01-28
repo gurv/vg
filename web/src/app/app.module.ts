@@ -15,11 +15,8 @@ import {AppState, InternalStateType} from './app.service';
 import {HomeComponent} from './home';
 import {NoContentComponent} from './no-content';
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {NavigatorComponent} from './navigator/navigator.component';
 
 import {CoreModule} from './core/core.module';
-import {MetadataModule} from './metadata/metadata.module';
-import {AccessModule} from './access/access.module';
 
 import {LayoutDirective} from './core/layout.directive';
 import {FlexDirective} from './core/flex.directive';
@@ -46,7 +43,6 @@ type StoreType = {
     HomeComponent,
     NoContentComponent,
     DashboardComponent,
-    NavigatorComponent,
     LayoutDirective, FlexDirective
   ],
   imports: [
@@ -58,8 +54,6 @@ type StoreType = {
 
     CoreModule.forRoot({userName: 'Гуринович Владимир'}),
     GoogleChartsModule,
-    MetadataModule,
-    AccessModule,
     CurrencyModule,
     MapModule,
     WeatherModule

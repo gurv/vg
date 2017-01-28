@@ -23,18 +23,18 @@
   <md-sidenav #sidenav mode="side" class="app-left-sidenav" opened="{{leftSideNav}}">
     <md-toolbar>
       <md-button-toggle-group value="modules">
-        <md-button-toggle value="favorite">
+        <md-button-toggle value="favorite" disabled>
           <md-icon>favorite_border</md-icon>
         </md-button-toggle>
         <md-button-toggle value="modules">
           <md-icon>view_module</md-icon>
         </md-button-toggle>
-        <md-button-toggle value="search">
+        <md-button-toggle value="search" disabled>
           <md-icon>search</md-icon>
         </md-button-toggle>
       </md-button-toggle-group>
       <span flex="100"></span>
-      <button md-icon-button>
+      <button md-icon-button disabled>
         <md-icon>refresh</md-icon>
       </button>
     </md-toolbar>
@@ -65,7 +65,7 @@
       </button>
     </md-toolbar>
     <md-nav-list>
-      <a md-list-item>
+      <a md-list-item disabled>
         <md-icon>settings_application</md-icon>
         <span md-line>Настройки</span>
       </a>
