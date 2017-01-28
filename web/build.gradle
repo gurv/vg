@@ -1,0 +1,14 @@
+task(BasePlugin.CLEAN_TASK_NAME, type: Exec) {
+  group = BasePlugin.BUILD_GROUP
+  commandLine "cmd", "/c", "npm", "run", "clean:dist"
+}
+
+task build(type: Exec) {
+  group = BasePlugin.BUILD_GROUP
+  commandLine "cmd", "/c", "npm", "run", "build:prod"
+}
+
+task buildDockerImage(type: Exec) {
+  group = rootProject.dockerTaskGroup
+  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name:$version", "."
+}
