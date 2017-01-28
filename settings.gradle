@@ -1,2 +1,10 @@
 rootProject.name = 'vg'
+
+include 'config'
+include 'discovery'
+include 'gateway'
+include 'database'
+include 'auth'
+include 'account'
 include 'metadata'
+include 'web'

@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://database-server:9092/metadata;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    userName: sa
+    password:
+    driver-class-name: org.h2.Driver
+    platform: h2
+
+  h2:
+    console:
+      enabled: true
+      path: /console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect

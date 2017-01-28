@@ -8,4 +8,5 @@ import ru.gurv.vg.metadata.domain.EntityType;
 public interface EntityTypeRepository extends CrudRepository<EntityType, String> {
 
 	EntityType findByCode(String code);
+
 }

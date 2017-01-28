@@ -1,0 +1,57 @@
+import java.security.Key
+import java.security.KeyStore
+import java.security.PrivateKey
+import java.security.PublicKey
+import java.security.cert.Certificate
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.0.12.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.7.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '1.2.2.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-eureka', version: '1.2.3.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.193'
+}
+
+bootRun {
+    systemProperties = [
+            'spring.cloud.config.enabled': false,
+            'eureka.client.enabled'      : false,
+            'spring.h2.console.enabled'  : true,
+            'spring.h2.console.path'     : '/console'
+    ]
+}
+
+// Создание файлов ключей
+task createJwtTokenKeystoreAndPublicKey {
+    def wrkDir = "${project.projectDir}/src/main/resources"
+    def storeFileName = rootProject.name + ".jks"
+    def keyFileName = rootProject.name + ".key"
+    def alias = rootProject.name
+    def password = "1q2w3e4r"
+
+    doLast {
+        delete "${wrkDir}/${storeFileName}"
+        delete "${wrkDir}/${keyFileName}"
+
+        // TODO Java-код
+        exec {
+            workingDir wrkDir
+            commandLine "keytool", "-genkeypair", "-alias", alias, "-keyalg", "RSA", "-dname", "CN=${rootProject.name}", "-keystore", storeFileName, "-keypass", password, "-storepass", password
+        }
+
+        FileInputStream is = new FileInputStream("${wrkDir}/${storeFileName}")
+        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keystore.load(is, password.toCharArray())
+        Key key = keystore.getKey(alias, password.toCharArray())
+        if (key instanceof PrivateKey) {
+            Certificate cert = keystore.getCertificate(alias)
+            PublicKey publicKey = cert.getPublicKey()
+            def file = new File("${wrkDir}/${keyFileName}")
+            file << "-----BEGIN PRIVATE KEY-----\n"
+            file << new sun.misc.BASE64Encoder().encode(publicKey.getEncoded()) + "\n"
+            file << "-----END PRIVATE KEY-----\n"
+        }
+    }
+}

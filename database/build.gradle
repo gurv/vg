@@ -1,0 +1,9 @@
+task buildServerDockerImage(type: Exec) {
+  group = rootProject.dockerTaskGroup
+  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-server:latest", "./server"
+}
+
+task buildDataDockerImage(type: Exec) {
+  group = rootProject.dockerTaskGroup
+  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-data:latest", "./data"
+}
