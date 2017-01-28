@@ -25,6 +25,7 @@ import {LayoutDirective} from './core/layout.directive';
 import {FlexDirective} from './core/flex.directive';
 import {CurrencyModule} from "./currency/currency.module";
 import {GoogleChartsModule} from "./shared/google-charts/google-charts.module";
+import {MapModule} from "./map/map.module";
 
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
@@ -58,7 +59,8 @@ type StoreType = {
     GoogleChartsModule,
     MetadataModule,
     AccessModule,
-    CurrencyModule
+    CurrencyModule,
+    MapModule
   ],
   providers: [
     ENV_PROVIDERS,

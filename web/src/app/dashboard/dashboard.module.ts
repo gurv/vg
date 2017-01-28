@@ -3,13 +3,13 @@ import {CommonModule} from '@angular/common';
 
 import {DashboardComponent} from './dashboard.component';
 import {CurrencyModule} from "../currency/currency.module";
-import {EvolutionComponent} from '../currency/evolution.component'
+import {MapModule} from "../map/map.module";
 
 console.log('Bundle `Dashboard` асинхронно загружен');
 
 @NgModule({
-  imports: [CommonModule, CurrencyModule],
-  declarations: [DashboardComponent, EvolutionComponent]
+  imports: [CommonModule, CurrencyModule, MapModule],
+  declarations: [DashboardComponent]
 })
 export class DashboardModule {
 }
