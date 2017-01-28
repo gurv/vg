@@ -32,7 +32,7 @@ export class CbrCurrencyRateDynamicService {
   }
 
   private dateToString(date: Date): string {
-    return date.toLocaleDateString().replace(/\./g, '/');
+    return date.toLocaleDateString().replace('.', '/');
   }
 
   private parseXml(xml: string): CbrCurrencyRate[] {
