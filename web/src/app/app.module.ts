@@ -26,6 +26,7 @@ import {FlexDirective} from './core/flex.directive';
 import {CurrencyModule} from "./currency/currency.module";
 import {GoogleChartsModule} from "./shared/google-charts/google-charts.module";
 import {MapModule} from "./map/map.module";
+import {WeatherModule} from "./weather/weather.module";
 
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
@@ -60,7 +61,8 @@ type StoreType = {
     MetadataModule,
     AccessModule,
     CurrencyModule,
-    MapModule
+    MapModule,
+    WeatherModule
   ],
   providers: [
     ENV_PROVIDERS,

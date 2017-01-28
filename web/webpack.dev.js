@@ -90,6 +90,11 @@ module.exports = function (options) {
           target: 'http://www.cbr.ru/',
           secure: false,
           changeOrigin: true
+        },
+        '/data': {
+          target: 'http://api.openweathermap.org/',
+          secure: false,
+          changeOrigin: true
         }
       }
     },
