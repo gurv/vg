@@ -4,3 +4,14 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     compile group: 'com.h2database', name: 'h2', version: '1.4.193'
 }
+
+/**
+ * В dev-режиме запускаться с локальным срвисом настроек ожидаемым на порту 8881.
+ * Если его нет, то запускаться с настройками из сборки
+ */
+//TODO Мб отключить поиск Discovery (в логах некрасиые exceptions)?
+bootRun {
+//    args = ["--eureka.client.enabled=false", "--spring.cloud.config.fail-fast=false"]
+//    args = ["--eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/", "--spring.cloud.config.fail-fast=false"]
+//    args = ["--eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/"]
+}

@@ -1,22 +1,14 @@
 spring:
   application:
     name: discovery
-  cloud:
-    config:
-      uri: http://config:8888
-      fail-fast: true
-#      password: ${CONFIG_SERVICE_PASSWORD}
-#      userName: user
-      discovery:
-        enabled: true
 
 eureka:
   instance:
     prefer-ip-address: true
+    hostname: localhost
+
   client:
     registerWithEureka: false
     fetchRegistry: false
     server:
       waitTimeInMsWhenSyncEmpty: 0
-#    serviceUrl:
-#      defaultZone: http://discovery:${server.port}/eureka/

@@ -1,8 +1,14 @@
+/**
+ * Делаем Docker-образ DB-сервера
+ */
 task buildServerDockerImage(type: Exec) {
   group = rootProject.dockerTaskGroup
   commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-server:latest", "./server"
 }
 
+/**
+ * Делаем Docker-образ DB-хранилища
+ */
 task buildDataDockerImage(type: Exec) {
   group = rootProject.dockerTaskGroup
   commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-data:latest", "./data"

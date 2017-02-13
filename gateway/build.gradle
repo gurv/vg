@@ -3,3 +3,12 @@ dependencies {
     compile group: 'org.springframework.cloud', name: 'spring-cloud-netflix-sidecar', version: '1.2.3.RELEASE'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '1.2.2.RELEASE'
 }
+
+/**
+ * В dev-режиме запускаться с локальным срвисом настроек ожидаемым на порту 8881.
+ * Если его нет, то запускаться с настройками из сборки
+ */
+bootRun {
+//    args = ["--eureka.client.enabled=false", "--spring.cloud.config.fail-fast=false"]
+//    args = ["--eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/"]
+}

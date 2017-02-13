@@ -8,6 +8,6 @@ RUN wget -q http://h2database.com/h2-$H2_VERSION.zip \
   && unzip -qq h2-$H2_VERSION.zip \
   && mv h2 $H2_PARENT_DIR \
   && rm -f h2-$H2_VERSION.zip \
-EXPOSE 8082
-EXPOSE 9092
-CMD java -classpath $H2_PARENT_DIR/h2/bin/*.jar org.h2.tools.Server -tcp -tcpAllowOthers -tcpPort 9092 -web -webAllowOthers -webPort 8082 -baseDir /db
+EXPOSE 8083
+EXPOSE 9093
+CMD java -classpath $H2_PARENT_DIR/h2/bin/*.jar org.h2.tools.Server -tcp -tcpAllowOthers -tcpPort 9093 -web -webAllowOthers -webPort 8083 -baseDir /db

@@ -1,26 +1,6 @@
 version: '2'
 
 services:
-  config:
-    build: ./config/build/docker
-    ports:
-      - 8888:8888
-
-  discovery:
-    build: ./discovery/build/docker
-
-  gateway:
-    build: ./gateway/build/docker
-
-  database-data:
-    build: ./database/data
-
-  database-server:
-    build: ./database/server
-    ports:
-      - 8082:8082 # web
-      - 9092:9092 # tcp
-
   auth:
     build: ./auth/build/docker
     ports:
@@ -34,7 +14,7 @@ services:
   metadata:
     build: ./metadata/build/docker
     ports:
-      - 8081:8081
+      - 8082:8082
 
   web:
     build: ./web

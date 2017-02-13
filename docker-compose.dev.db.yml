@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  database-data:
+    build: ./database/data
+    container_name: vg_database_data
+
+  database-server:
+    build: ./database/server
+    container_name: vg_database_server
+    ports:
+      - 8083:8083 # web
+      - 9093:9093 # tcp

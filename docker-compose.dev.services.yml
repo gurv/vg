@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  discovery:
+    build: ./discovery/build/docker
+    image: gurv/vg-discovery:latest
+    container_name: vg_discovery
+    restart: always
+    ports:
+      - 8761:8761
+
+  config:
+    build: ./config/build/docker
+    image: gurv/vg-config:latest
+    container_name: vg_config
+    restart: always
+    ports:
+      - 8881:8881
+    links:
+      - discovery
+
+  gateway:
+    build: ./gateway/build/docker
+    image: gurv/vg-gateway:latest
+    container_name: vg_gateway
+    restart: always
+    ports:
+     - 10000:10000
+    links:
+      - discovery
+      - config

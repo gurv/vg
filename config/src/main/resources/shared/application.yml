@@ -3,10 +3,3 @@ logging:
     org.springframework: TRACE
     org.hibernate.SQL: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://discovery:8761/eureka/

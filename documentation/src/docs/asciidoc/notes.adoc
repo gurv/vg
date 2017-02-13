@@ -1,0 +1,269 @@
+:toc-title: Содержимое
+
+= Сервисы
+
+== Обзор
+[plantuml, services, png]
+....
+title Диаграмма сервисов
+[Web]
+note right of [Web]
+  Angular
+end note
+[Gateway]
+note right of [Gateway]
+  Zuul
+end note
+[Config]
+[Discovery]
+note right of [Discovery]
+  Eureka
+end note
+[Auth]
+note right of [Auth]
+  OAuth2
+end note
+[Account]
+[Metadata]
+[DbServer]
+[DbData]
+note left of [DbServer]
+  H2
+end note
+[Web] --> [Gateway]
+[Gateway] --> [Discovery]
+[Gateway] --> [Config]
+[Gateway] --> [Auth]
+[Gateway] --> [Account]
+[Gateway] --> [Metadata]
+[Account] --> [Discovery]
+[Account] --> [Config]
+[Account] --> [DbServer] : TCP
+[Auth] --> [Discovery]
+[Auth] --> [Config]
+[Auth] --> [DbServer] : TCP
+[Discovery] <--> [Config]
+[Metadata] --> [Config]
+[Metadata] --> [Discovery]
+[Metadata] --> [DbServer] : TCP
+[DbServer] --> [Config]
+[DbServer] -- [DbData] : Docker Storage Volume
+....
+
+Порты сервисов
+[cols="2*", options="header"]
+|===
+|Сервис
+|Порт
+
+|Config
+|8881
+
+|Discovery
+|8761
+
+|Gateway
+|10000; 8000 (Sidecar)
+
+|Auth
+|5000
+
+|Metadata
+|8082
+
+|Хранилище данных
+|8083, 9093 (TCP)
+|===
+
+=== Работа с сервисами
+
+* Запуск хранилища данных в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml up -d
+----
+
+* Останов хранилища данных в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml stop
+----
+
+* Запуск сервисов в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.services.yml up -d
+----
+
+* Останов сервисов запущенных в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.services.yml stop
+----
+
+* Удаление контейнеров остановленных сервисов в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml rm
+----
+
+* Проверка доступности сервиса Config (на примере получения значения настроек по умолчанию сервиса Discovery)
+
+http://localhost:8881/discovery/default
+
+* Проверка доступности сервиса Metadata
+
+http://localhost:8082/test
+
+=== Разработчику
+
+[plantuml, dev-env, png]
+....
+title Dev-окружение
+[Java]
+[Gradle]
+[NodeJS]
+[Webpack]
+[Docker]
+[Asciidoc]
+[GraphViz]
+....
+
+* Создание ключей
+
+[source]
+----
+C:\app\java\jre1.8.0_92\bin\keytool.exe -genkeypair -alias vg -keyalg RSA -dname "CN=vg" -keystore vg.jks -keypass 1q2w3e4r -storepass 1q2w3e4r
+C:\app\java\jre1.8.0_92\bin\keytool.exe -export -keystore vg.jks -alias vg -rfc -storepass 1q2w3e4r -file vg.cer
+C:\app\openSSL\bin\openssl.exe x509 -inform pem -pubkey -in vg.cer
+----
+
+== Конфигуратор (Config)
+* Сборка (если требуется) и запуск сервиса Config
+[source]
+----
+gradle :config:bootRun
+----
+* Запуск (без Gradle) сервиса Config (в примере версии 0.1.0)
+[source]
+----
+java -jar config/build/libs/vg-config-0.1.0.jar --eureka.client.enabled=false
+----
+
+== Обнаружитель (Discovery)
+* Сборка (если требуется) и запуск сервиса Discovery
+[source]
+----
+gradle :discovery:bootRun
+----
+* Запуск (без Gradle) сервиса Discovery (в примере версии 0.1.0)
+[source]
+----
+java -jar discovery/build/libs/vg-discovery-0.1.0.jar --spring.cloud.config.fail-fast=false --spring.cloud.config.uri=http://localhost:8881
+----
+* Web-консоль сервиса Discovery
+
+http://localhost:8761/
+
+== Авторизация (Auth)
+
+== Учетные записи (Account)
+
+== Gateway (Gateway)
+* Сборка (если требуется) и запуск сервиса Gateway
+[source]
+----
+gradle :gateway:bootRun
+----
+
+* Запуск (без Gradle) сервиса Gateway (в примере версии 0.1.0)
+[source]
+----
+java -jar gateway/build/libs/vg-gateway-0.1.0.jar --eureka.client.enabled=false --spring.cloud.config.fail-fast=false
+----
+
+* Web-консоль сервиса Gateway
+
+http://localhost:10000/
+
+== Модель данных (Metadata)
+* Сборка (если требуется) и запуск сервиса Metadata
+[source]
+----
+gradle :metadata:bootRun
+----
+
+* Запуск (без Gradle) сервиса Metadata (в примере версии 0.1.0)
+[source]
+----
+java -jar metadata/build/libs/vg-metadata-0.1.0.jar --eureka.client.enabled=false --spring.cloud.config.fail-fast=false
+----
+
+* Web-console хранилища данных
+
+http://localhost:8082/db-console
+
+в поле JDBC URL указать
+[source]
+----
+jdbc:h2:tcp://localhost:9093/metadata
+----
+
+== Хранилище данных
+* Сборка Docker-образа DB-хранилища
+[source]
+----
+gradle :database:buildDataDockerImage
+----
+
+* Сборка Docker-образа DB-сервера
+[source]
+----
+gradle :database:buildServerDockerImage
+----
+
+* Запуск хранилища данных в Docker-е
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml up -d
+----
+
+* Web-консоль хранилища данных (например, jdbc:h2:metadata - соединение с БД сервиса Metadata)
+
+http://localhost:8083
+
+== Документация
+* Сформировать документацию
+[source]
+----
+gradle asciidoctor
+----
+* Открыть документацию в броузере
+[source]
+----
+documentation/build/asciidoc/html5/notes.html
+----
+
+== Заметки
+=== Docker
+* Список образов (images)
+[source]
+----
+docker images
+----
+
+== TODO
+* 20170212 Остановился на том, что в Docker-е при запуске сервис Gataway не находит сервис Config.
+Он это должен сделать через сервис Discovery. По логам
+[source]
+----
+2017-02-12T02:34:16.048088000Z 2017-02-12 02:34:16.047  INFO 5 --- [           main] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at: http://localhost:8888
+----
+почему то обращается на порт 8888 ?!
+
+* Перейти на формат файла Docker Compose версии 3
