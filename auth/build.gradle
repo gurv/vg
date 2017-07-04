@@ -17,9 +17,8 @@ dependencies {
 bootRun {
     systemProperties = [
             'spring.cloud.config.enabled': false,
-            'eureka.client.enabled'      : false,
-            'spring.h2.console.enabled'  : true,
-            'spring.h2.console.path'     : '/console'
+            'spring.datasource.url'      : 'jdbc:h2:mem:auth',
+            'spring.h2.console.enabled'  : true
     ]
 }
 

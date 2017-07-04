@@ -1,7 +1,3 @@
-endpoints:
-  restart:
+eureka:
+  client:
     enabled: true
-  shutdown:
-    enabled: true
-  health:
-    sensitive: false

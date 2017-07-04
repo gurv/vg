@@ -24,6 +24,7 @@ import {CurrencyModule} from "./currency/currency.module";
 import {GoogleChartsModule} from "./shared/google-charts/google-charts.module";
 import {MapModule} from "./map/map.module";
 import {WeatherModule} from "./weather/weather.module";
+import {LoginComponent} from "./login/login.component";
 
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
@@ -43,6 +44,7 @@ type StoreType = {
     HomeComponent,
     NoContentComponent,
     DashboardComponent,
+    LoginComponent,
     LayoutDirective, FlexDirective
   ],
   imports: [

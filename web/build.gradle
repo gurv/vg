@@ -8,7 +8,10 @@ task build(type: Exec) {
   commandLine "cmd", "/c", "npm", "run", "build:prod"
 }
 
+/*
 task buildDockerImage(type: Exec) {
+  dependsOn build
   group = rootProject.dockerTaskGroup
-  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name:$version", "."
+  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name:latest", "."
 }
+*/

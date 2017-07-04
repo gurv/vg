@@ -16,3 +16,7 @@ asciidoctor {
     sources { include '*.adoc' }
     requires 'asciidoctor-diagram'
 }
+
+build {
+    dependsOn asciidoctor
+}

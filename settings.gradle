@@ -1,7 +1,7 @@
 rootProject.name = 'vg'
 
-include 'config'
 include 'discovery'
+include 'config'
 include 'gateway'
 include 'database'
 include 'auth'

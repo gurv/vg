@@ -1,12 +1,4 @@
 dependencies {
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-eureka-server', version: '1.2.3.RELEASE'
-}
-
-/**
- * В dev-режиме запускаться с локальным сервисом настроек ожидаемым на порту 8881.
- * Если его нет, то запускаться с настройками из сборки
- */
-bootRun {
-//    args = ["--spring.cloud.config.uri=http://localhost:8881"]
-//    args = ["--eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/"]
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '1.2.2.RELEASE'
 }

@@ -1,3 +1,3 @@
-INSERT INTO User (userName, password) VALUES ('demo', 'demo');
+INSERT INTO USER (USER_NAME, PASSWORD) VALUES ('demo', 'demo');
 
-INSERT INTO Account (name, note) VALUES ('demo', 'demo account');
+INSERT INTO ACCOUNT (NAME, NOTE) VALUES ('demo', 'demo account');

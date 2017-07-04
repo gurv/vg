@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  database-server:
+    volumes:
+      - ./.dev/db_data:/db_data

@@ -13,3 +13,11 @@ task buildDataDockerImage(type: Exec) {
   group = rootProject.dockerTaskGroup
   commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-data:latest", "./data"
 }
+
+/**
+ * Делаем все Docker-образ хранилища данныз
+ */
+task buildDockerImage() {
+  dependsOn buildDataDockerImage
+  dependsOn buildServerDockerImage
+}

@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  database-data:
+    build: ./database/data
+    container_name: vg_database_data
+
+  database-server:
+    volumes_from:
+      - database-data

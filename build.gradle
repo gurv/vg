@@ -11,14 +11,21 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '1.4.3.RELEASE'
+    id 'org.springframework.boot' version '1.4.3.RELEASE' apply false
 }
 
 def databaseProject = project(':database')
 def webProject = project(':web')
 
-configure(rootProject) {
+def javaSubproects() {
+    subprojects - project(':web') - project(':database') - project(':documentation')
+}
 
+def dockerSubprojects() {
+    subprojects - project(':web') - project(':account') - project(':auth') - project(':documentation')
+}
+
+configure(rootProject) {
     ext {
         dockerTaskGroup = 'Docker'
     }
@@ -30,7 +37,6 @@ configure(rootProject) {
 }
 
 configure(subprojects) {
-
     ext {
         buildNoString = project.hasProperty('buildNo') ? "${buildNo}" : "0.1.0"
     }
@@ -40,7 +46,6 @@ configure(subprojects) {
 }
 
 configure(subprojects - databaseProject) {
-
     task pushDockerImage(type: Exec) {
         group = rootProject.dockerTaskGroup
         commandLine "docker", "push", "gurv/$rootProject.name-$project.name"
@@ -56,8 +61,7 @@ configure(subprojects - databaseProject) {
     }
 }
 
-configure(subprojects - webProject - databaseProject) {
-
+configure(javaSubproects()) {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'propdeps'
@@ -177,4 +181,3 @@ class Dockerfile extends DefaultTask {
     }
 
 }
-
