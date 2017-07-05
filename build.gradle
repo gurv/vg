@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '1.4.3.RELEASE' apply false
+    id 'org.springframework.boot' version '1.5.4.RELEASE' apply false
 }
 
 def databaseProject = project(':database')
@@ -83,7 +83,7 @@ configure(javaSubproects()) {
     dependencies {
         compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
         compile group: 'org.springframework', name: 'spring-web'
-        compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.4.3.RELEASE'
+        compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.5.4.RELEASE'
     }
 
     bootRepackage {
