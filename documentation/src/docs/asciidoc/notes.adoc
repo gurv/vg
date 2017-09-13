@@ -433,15 +433,11 @@ documentation/build/asciidoc/html5/notes.html
 
 == Заметки
 
-=== NodeJs
+:leveloffset: +1
 
-* Upgrade Angular CLI
-[source]
-----
-npm uninstall --global angular-cli
-npm cache clean
-npm install --global @angular/cli
-----
+include::angular/angular.adoc[]
+
+:leveloffset: -1
 
 === Docker
 
