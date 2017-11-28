@@ -433,12 +433,6 @@ documentation/build/asciidoc/html5/notes.html
 
 == Заметки
 
-:leveloffset: +1
-
-include::angular/angular.adoc[]
-
-:leveloffset: -1
-
 === Docker
 
 * Список образов
