@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "prod-build": "ng build --output-path=last-build/ --env=prod",
-    "clean": "npm cache clean && npm run rimraf -- node_modules last-build",
+    "clean": "npm cache clean --force && npm run dist-clean && rimraf -- node_modules",
     "dist-clean": "npm run rimraf -- last-build && npm run rimraf -- tmp",
     "rimraf": "rimraf",
     "test": "ng test",
