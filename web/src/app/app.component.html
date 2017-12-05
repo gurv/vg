@@ -1,5 +1,21 @@
-<div style="text-align:center">
-  <h1>
-    {{title}}
-  </h1>
-</div>
+<nav class="docs-navbar-header">
+  <mat-toolbar>
+    <button mat-icon-button aria-label="Menu" disabled>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>{{title}}</span>
+    <div class="flex-spacer"></div>
+    <button mat-icon-button *ngIf="info">
+      <mat-icon>info</mat-icon>
+    </button>
+    <button mat-icon-button disabled>
+      <mat-icon>power_settings_new</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="powerOn">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+    <button mat-icon-button disabled>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-toolbar>
+</nav>
