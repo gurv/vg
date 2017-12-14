@@ -1,10 +1,8 @@
 import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { SharedModule } from './shared';
 
-import {
-  MatButtonModule, MatToolbarModule, MatIconModule, MatIconRegistry
-}
-  from '@angular/material'
+import { MatIconRegistry } from '@angular/material'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
@@ -15,9 +13,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule
+
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
