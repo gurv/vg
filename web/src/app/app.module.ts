@@ -5,6 +5,7 @@ import { StaticModule } from './static';
 
 import { MatIconRegistry } from '@angular/material'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { AppComponent } from './app.component';
 
     SharedModule,
     StaticModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
