@@ -1,6 +1,7 @@
 import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { SharedModule } from './shared';
+import { CoreModule } from './core';
 import { StaticModule } from './static';
 
 import { MatIconRegistry } from '@angular/material'
@@ -17,6 +18,7 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
 
     SharedModule,
+    CoreModule,
     StaticModule,
     AppRoutingModule,
   ],
