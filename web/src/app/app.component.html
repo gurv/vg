@@ -18,7 +18,7 @@
       <mat-icon>more_vert</mat-icon>
     </button>
   </mat-toolbar>
-  <div [@routerTransition]="o.isActivated && o.activatedRoute.routeConfig.path">
+  <div>
     <router-outlet #o="outlet"></router-outlet>
   </div>
 </nav>
