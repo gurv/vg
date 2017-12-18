@@ -2,12 +2,12 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {DashboardComponent} from './dashboard.component';
-import {ToolchainComponent} from './toolchain/toolchain.component';
 import {SharedModule} from "@app/shared";
+import {ToolchainModule} from "@app/static/dashboard/toolchain/toolchain.module";
 
 @NgModule({
-  imports: [CommonModule, SharedModule],
-  declarations: [DashboardComponent, ToolchainComponent]
+  imports: [CommonModule, SharedModule, ToolchainModule],
+  declarations: [DashboardComponent]
 })
 export class DashboardModule {
 }
