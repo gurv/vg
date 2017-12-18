@@ -4,10 +4,10 @@ import { SharedModule } from '../shared';
 
 import { StaticRoutingModule } from './static-routing.module';
 import { AboutComponent } from './about/about.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import {DashboardModule} from "@app/static/dashboard/dashboard.module";
 
 @NgModule({
-  imports: [SharedModule, StaticRoutingModule],
-  declarations: [AboutComponent, DashboardComponent]
+  imports: [SharedModule, StaticRoutingModule, DashboardModule],
+  declarations: [AboutComponent]
 })
 export class StaticModule {}
