@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "proxy-start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "prod-build": "ng build --output-path=last-build/ --env=prod",
     "clean": "npm cache clean --force && npm run dist-clean && rimraf -- node_modules",
@@ -30,6 +31,7 @@
     "@angular/router": "^5.1.0",
     "@angular/flex-layout": "^2.0.0-beta.12",
     "core-js": "^2.5.0",
+    "ng2-google-charts": "^3.3.0",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },

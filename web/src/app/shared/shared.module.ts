@@ -16,15 +16,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTableModule } from "@angular/material";
+import { MatTableModule, MatPaginatorModule } from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { Ng2GoogleChartsModule } from "ng2-google-charts";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     FlexLayoutModule,
-
+    Ng2GoogleChartsModule,
     MatButtonModule,
     MatToolbarModule,
     MatSelectModule,
@@ -39,13 +40,14 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatMenuModule,
     MatIconModule,
     MatTooltipModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
   ],
   exports: [
     CommonModule,
     FormsModule,
     FlexLayoutModule,
-
+    Ng2GoogleChartsModule,
     MatButtonModule,
     MatMenuModule,
     MatTabsModule,
@@ -60,7 +62,8 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatToolbarModule,
     MatIconModule,
     MatTooltipModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
   ]
 })
 export class SharedModule {}
