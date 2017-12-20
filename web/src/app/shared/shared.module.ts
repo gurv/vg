@@ -17,11 +17,13 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from "@angular/material";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    FlexLayoutModule,
 
     MatButtonModule,
     MatToolbarModule,
@@ -42,6 +44,7 @@ import { MatTableModule } from "@angular/material";
   exports: [
     CommonModule,
     FormsModule,
+    FlexLayoutModule,
 
     MatButtonModule,
     MatMenuModule,
