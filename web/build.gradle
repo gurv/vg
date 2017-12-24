@@ -5,7 +5,7 @@ task(BasePlugin.CLEAN_TASK_NAME, type: Exec) {
 
 task build(type: Exec) {
   group = BasePlugin.BUILD_GROUP
-  commandLine "cmd", "/c", "npm", "run", "prod:build"
+  commandLine "cmd", "/c", "npm", "run", "prod-build"
 }
 
 /*
