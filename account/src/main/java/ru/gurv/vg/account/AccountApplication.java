@@ -1,10 +1,14 @@
 package ru.gurv.vg.account;
 
+/*
 import org.springframework.beans.factory.annotation.Autowired;
+*/
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+/*
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+*/
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
@@ -27,8 +31,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EntityScan(basePackages = "ru.gurv.vg.account.domain")
 public class AccountApplication extends ResourceServerConfigurerAdapter {
 
+/*
     @Autowired
     private ResourceServerProperties sso;
+*/
 
     public static void main(String[] args) {
         SpringApplication.run(AccountApplication.class, args);

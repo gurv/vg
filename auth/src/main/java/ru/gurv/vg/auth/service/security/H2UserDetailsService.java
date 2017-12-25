@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.gurv.vg.auth.domain.User;
 import ru.gurv.vg.auth.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class H2UserDetailsService implements UserDetailsService {
 
@@ -17,13 +19,13 @@ public class H2UserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		User user = repository.findOne(username);
+		Optional<User> user = repository.findById(username);
 
-		if (user == null) {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException(username);
 		}
 
-		return user;
+		return user.get();
 	}
 
 }

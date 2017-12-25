@@ -9,6 +9,8 @@ import org.springframework.util.Assert;
 import ru.gurv.vg.auth.domain.User;
 import ru.gurv.vg.auth.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -22,7 +24,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void create(User user) {
 
-		User existing = repository.findOne(user.getUsername());
+		Optional<User> existing = repository.findById(user.getUsername());
 		Assert.isNull(existing, "user already exists: " + user.getUsername());
 
 		String hash = encoder.encode(user.getPassword());

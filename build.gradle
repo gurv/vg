@@ -1,28 +1,22 @@
 buildscript {
+    ext {
+        springBootVersion = '2.0.0.M7'
+    }
     repositories {
-        mavenLocal()
-        jcenter()
         mavenCentral()
+        jcenter()
+        maven { url "https://repo.spring.io/milestone" }
         maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
-        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
-plugins {
-    id 'org.springframework.boot' version '1.5.4.RELEASE' apply false
-}
-
 def databaseProject = project(':database')
-def webProject = project(':web')
 
-def javaSubproects() {
+def javaProjects() {
     subprojects - project(':web') - project(':database') - project(':documentation')
-}
-
-def dockerSubprojects() {
-    subprojects - project(':web') - project(':account') - project(':auth') - project(':documentation')
 }
 
 configure(rootProject) {
@@ -61,33 +55,45 @@ configure(subprojects - databaseProject) {
     }
 }
 
-configure(javaSubproects()) {
+configure(javaProjects()) {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'propdeps-eclipse'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+    }
+
+    ext {
+        springCloudVersion = 'Finchley.M5'
+        springCloudNetflixVersion = '2.0.0.M5'
+        springSecurityVersion = '5.0.0.RELEASE'
+        springSecurityOAuthVersion = '2.2.1.RELEASE'
+        springSecurityJwtVersion = '1.0.9.RELEASE'
+    }
 
     jar {
         baseName = rootProject.name + '-' + baseName
     }
 
-    sourceCompatibility = '1.8'
-
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-
-    dependencies {
-        compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-        compile group: 'org.springframework', name: 'spring-web'
-        compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.5.4.RELEASE'
-    }
-
-    bootRepackage {
+    bootJar {
         excludeDevtools = true
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.security:spring-security-bom:$springSecurityVersion"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+            mavenBom "org.springframework.cloud:spring-cloud-netflix:$springCloudNetflixVersion"
+        }
+        dependencies {
+            dependency "org.springframework.cloud:spring-cloud-netflix-sidecar:$springCloudNetflixVersion"
+            dependency "org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuthVersion"
+            dependency "org.springframework.security:spring-security-jwt:$springSecurityJwtVersion"
+        }
     }
 
     task buildDockerImage(type: Exec) {
@@ -179,5 +185,4 @@ class Dockerfile extends DefaultTask {
         file.parentFile.mkdirs()
         file.write dockerfileInfo
     }
-
 }
