@@ -16,7 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTableModule, MatPaginatorModule } from "@angular/material";
+import { MatTableModule, MatPaginatorModule, MatExpansionModule } from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { Ng2GoogleChartsModule } from "ng2-google-charts";
 
@@ -41,7 +41,8 @@ import { Ng2GoogleChartsModule } from "ng2-google-charts";
     MatIconModule,
     MatTooltipModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule,
   ],
   exports: [
     CommonModule,
@@ -63,7 +64,8 @@ import { Ng2GoogleChartsModule } from "ng2-google-charts";
     MatIconModule,
     MatTooltipModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule,
   ]
 })
 export class SharedModule {}
