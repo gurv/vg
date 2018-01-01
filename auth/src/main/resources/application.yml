@@ -1,0 +1,23 @@
+spring:
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: 0oadedwx631cHt7T60h7
+            client-secret: 9v4wFP4LbIvUGGeRCJfVk9tUBXygNSodY20I9m5K
+          github:
+            client-id: 25d1d7b7e929269cf5e9
+            client-secret: 59c5842207877362383b4442a750a4216ba1be3e
+        provider:
+          okta:
+            authorization-uri: https://dev-957327.oktapreview.com/oauth2/default/v1/authorize
+            token-uri: https://dev-957327.oktapreview.com/oauth2/default/v1/token
+            user-info-uri: https://dev-957327.oktapreview.com/oauth2/default/v1/userinfo
+            jwk-set-uri: https://dev-957327.oktapreview.com/oauth2/default/v1/keys
+
+eureka:
+  client:
+    enabled: false
