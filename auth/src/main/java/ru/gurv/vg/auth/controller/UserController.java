@@ -8,7 +8,7 @@ import java.security.Principal;
 @RestController
 public class UserController {
 
-    @GetMapping("/")
+    @GetMapping("/hello")
     String home(Principal user) {
         return "Hello " + user.getName();
     }
