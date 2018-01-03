@@ -178,26 +178,6 @@ docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml r
 ----
 gradle clean
 ----
-=== web
-
-Запуск в dev-режиме
-----
-npm run proxy-start
-----
-
-Запуск в dev-режиме
-----
-npm run proxy-start
-----
-
-[TIP]
-====
-Вход
-```
-start http://localhost:4200
-```
-или link:localhost:4200[localhost:4200]
-====
 
 == Сервисы
 
@@ -426,15 +406,18 @@ gradle :database:buildServerDockerImage
 == WEB-приложение
 
 * Запуск в dev-режиме
-[source]
 ----
-npm run start --prefix ./web
+npm run proxy-start
 ----
 
-* Удаление всей сборки
-[source]
+* Сборка (в каталог last-build)
 ----
-npm run clean --prefix ./web
+npm run prod-build
+----
+
+* Удаление сборки
+----
+npm run dist-clean
 ----
 
 == Документация
