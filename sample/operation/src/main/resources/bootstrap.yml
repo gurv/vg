@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: sample-operation
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true

@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:operation
+    userName: sa
+    password:
+    driver-class-name: org.h2.Driver
+    platform: h2
+    initialization-mode: embedded
+    continue-on-error: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+      hbm2ddl:
+        auto: update
+  h2:
+    console:
+      enabled: true
+      path: /db-console
+eureka:
+  client:
+    enabled: false

@@ -451,6 +451,32 @@ gradle asciidoctor
 documentation/build/asciidoc/html5/notes.html
 ----
 
+== Примеры
+
+=== Операции
+
+Ссылки:
+
+http://localhost:8080/ping
+
+http://localhost:8080/db-console
+
+http://localhost:8080/browser/index.html#/
+
+http://localhost:8080/operation
+
+http://localhost:8080/operation/1
+
+http://localhost:8080/operation/?size=5
+
+http://localhost:8080/operation?page=0
+
+http://localhost:8080/operation/search/countByTimestampLessThanEqual
+
+http://localhost:8080/profile/operation
+
+http://localhost:8080/operations/operation
+
 == Заметки
 
 === Docker
