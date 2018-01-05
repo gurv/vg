@@ -1,7 +1,7 @@
 package ru.gurv.vg.sample.operation.domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Operation {
@@ -11,11 +11,15 @@ public class Operation {
     @SequenceGenerator(name = "OPERATION_ID_SEQ", sequenceName = "OPERATION_ID_SEQ", allocationSize = 100)
 	private long id;
 
-    @Column(insertable = false, updatable = false)
-	private Date ts;
+    @Column(updatable = false)
+	private LocalDateTime ts;
 
     @Column(insertable = false)
     private Integer state;
+
+    public void setTs(LocalDateTime ts) {
+        this.ts = ts;
+    }
 
     @Override
     public String toString() {

@@ -454,7 +454,7 @@ http://localhost:8080/operation/?size=5
 
 http://localhost:8080/operation?page=0
 
-http://localhost:8080/operation/search/countByTimestampLessThanEqual
+http://localhost:8080/operation/search/countByTimestampLessThanEqual?ts=2019-01-01T01:30:00.000-04:00
 
 http://localhost:8080/profile/operation
 
