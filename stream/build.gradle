@@ -1,0 +1,7 @@
+/**
+ * Сборка всех docker-образов
+ */
+task buildDockerImage() {
+    group = rootProject.dockerTaskGroup
+    dependsOn kafka:buildDockerImage
+}

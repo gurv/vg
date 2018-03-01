@@ -15,8 +15,26 @@ buildscript {
 
 def databaseProject = project(':database')
 
+def dockerPureProjects() {
+    subprojects.findAll {
+        def hasIncludes = it.path in [
+                ':stream:kafka',
+                ':stream:zookeeper',
+        ]
+        return hasIncludes
+    }
+}
+
 def javaProjects() {
-    subprojects - project(':web') - project(':database') - project(':documentation')
+    subprojects.findAll {
+        def hasExcludes = it.path in [
+                ':web',
+                ':database',
+                ':stream',
+                ':documentation',
+        ]
+        return !hasExcludes
+    } - dockerPureProjects()
 }
 
 configure(rootProject) {
@@ -47,11 +65,23 @@ configure(subprojects - databaseProject) {
 
     task runDockerImage(type: Exec) {
         group = rootProject.dockerTaskGroup
-        if (project.hasProperty("dockerPort")) {
-            commandLine "docker", "run", "-i", "-p", "$project.dockerPort:$project.dockerPort", "gurv/$rootProject.name-$project.name:$version"
-        } else {
-            commandLine "docker", "run", "-i", "gurv/$rootProject.name-$project.name:latest"
+        commandLine "docker", "run", "-i", "gurv/$rootProject.name-$project.name:latest"
+    }
+}
+
+configure(dockerPureProjects()) {
+    task buildDockerImage(type: Exec) {
+        group = rootProject.dockerTaskGroup
+        def dockerDir = "$project.buildDir/docker"
+        doFirst {
+            copy {
+                from 'src/main/docker'
+                into "$dockerDir"
+            }
         }
+        commandLine "docker", "build",
+                "-t", "gurv/$rootProject.name-$project.name:latest",
+                "$dockerDir"
     }
 }
 
