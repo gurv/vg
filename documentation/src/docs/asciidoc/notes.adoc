@@ -142,6 +142,13 @@ docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.db.local.yml -
 По состоянию на 20170303: требуется 2 шт. таких запуска, т.к. при первом пуске сервис Gateway так и не соединился с сервисом Config
 ====
 
+* Запуск в Docker-е Stream-инфраструктуры (Kafka/...)
+
+[source]
+----
+docker-compose -f docker-compose.dev.stream.yml  up -d
+----
+
 * Останов сервисов в Docker-е
 
 [source]
