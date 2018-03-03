@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.M7'
+        springBootVersion = '2.0.0.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -98,9 +98,8 @@ configure(javaProjects()) {
     }
 
     ext {
-        springCloudVersion = 'Finchley.M5'
-        springCloudNetflixVersion = '2.0.0.M5'
-        springSecurityVersion = '5.0.0.RELEASE'
+        springCloudVersion = 'Finchley.M8'
+        springSecurityVersion = '5.0.3.RELEASE'
         springSecurityOAuthVersion = '2.2.1.RELEASE'
         springSecurityJwtVersion = '1.0.9.RELEASE'
     }
@@ -117,10 +116,8 @@ configure(javaProjects()) {
         imports {
             mavenBom "org.springframework.security:spring-security-bom:$springSecurityVersion"
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
-            mavenBom "org.springframework.cloud:spring-cloud-netflix:$springCloudNetflixVersion"
         }
         dependencies {
-            dependency "org.springframework.cloud:spring-cloud-netflix-sidecar:$springCloudNetflixVersion"
             dependency "org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuthVersion"
             dependency "org.springframework.security:spring-security-jwt:$springSecurityJwtVersion"
         }
