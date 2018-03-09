@@ -5,4 +5,4 @@
 #   Tutorial: http://wurstmeister.github.io/kafka-docker/
 FROM wurstmeister/kafka
 
-MAINTAINER Vladimir Gurinovich <vladimir.gurinovich@gmail.com>
+MAINTAINER $$maintainer$$

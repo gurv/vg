@@ -2,21 +2,21 @@ version: '3.4'
 
 services:
   stream-zookeeper:
-    build: ./stream/zookeeper/src/main/docker
-    image: gurv/vg-zookeeper:latest
-    container_name: vg_zookeeper
+    build: ./stream/zookeeper/build/docker
+    image: gurv/vg-stream-zookeeper:latest
+    container_name: vg-stream-zookeeper
     ports:
       - 2181:2181 # clientPort
       - 2888:2888 # peerPort
       - 3888:3888 # leaderPort
   stream-kafka:
-    build: ./stream/kafka/src/main/docker
-    image: gurv/vg-kafka:latest
-    container_name: vg_kafka
+    build: ./stream/kafka/build/docker
+    image: gurv/vg-stream-kafka:latest
+    container_name: vg-stream-kafka
     ports:
-      - 9092 #TODO назначение
+      - 9092:9092 #TODO назначение
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 192.168.1.6
-      KAFKA_ZOOKEEPER_CONNECT: stream-zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: vg-stream-zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

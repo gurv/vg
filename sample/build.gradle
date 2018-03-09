@@ -1,0 +1,8 @@
+task dockerImage() {
+    description = "Build docker-images project '$project.path'."
+    group = rootProject.dockerTaskGroup
+    dependsOn = [
+            'operation:dockerImage',
+            'account:dockerImage',
+    ]
+}

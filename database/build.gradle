@@ -1,23 +1,8 @@
-/**
- * Делаем Docker-образ DB-сервера
- */
-task buildServerDockerImage(type: Exec) {
+task dockerImage() {
+  description = "Build docker-images project '$project.path'."
   group = rootProject.dockerTaskGroup
-  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-server:latest", "./server"
-}
-
-/**
- * Делаем Docker-образ DB-хранилища
- */
-task buildDataDockerImage(type: Exec) {
-  group = rootProject.dockerTaskGroup
-  commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name-data:latest", "./data"
-}
-
-/**
- * Делаем все Docker-образ хранилища данныз
- */
-task buildDockerImage() {
-  dependsOn buildDataDockerImage
-  dependsOn buildServerDockerImage
+  dependsOn = [
+          'server:dockerImage',
+          'data:dockerImage',
+  ]
 }

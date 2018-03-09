@@ -1,2 +1,3 @@
 FROM nginx:latest
-COPY dist /usr/share/nginx/html
+
+COPY last-build /usr/share/nginx/html

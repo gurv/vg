@@ -2,11 +2,13 @@ ext {
     dockerPort = 2181
 }
 
-task runDockerImage(type: Exec, overwrite: true) {
+task dockerRun(type: Exec, overwrite: true) {
+    description = "Run docker-container project '$project.path'."
     group = rootProject.dockerTaskGroup
+
     commandLine "docker", "run",
             "-d",
             "-p", "127.0.0.1:$project.ext.dockerPort:$project.ext.dockerPort",
-            "--name", "$rootProject.name-$project.name",
-            "gurv/$rootProject.name-$project.name:latest"
+            "--name", project.dockerContainerName,
+            project.dockerImageName
 }

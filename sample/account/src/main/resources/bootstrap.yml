@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: sample-account
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true

@@ -1,0 +1,14 @@
+task dockerRun(overwrite: true) {
+    description = "Run docker-container project '$project.path'."
+    group = rootProject.dockerTaskGroup
+
+    // Невозможен запуск этого образа из gradle, т.к. используются опции -i -t
+    // Можно выполнить из cmd следующее:
+    // docker run -i -t --name vg-dataflow-shell --link vg-dataflow-server:server gurv/vg-dataflow-shell:latest
+    // И затем выполнить из shell следующее:
+    // dataflow config server http://server:9393
+    //FIXME но после выполнения, например, "dataflow config info" возникает ошибка "New state of 'nil' is invalid."
+
+    // Локалный запуск (скачать http://central.maven.org/maven2/org/springframework/cloud/spring-cloud-dataflow-shell/1.3.1.RELEASE/spring-cloud-dataflow-shell-1.3.1.RELEASE.jar)
+    // java.exe -jar spring-cloud-dataflow-shell-1.3.1.RELEASE.jar
+}

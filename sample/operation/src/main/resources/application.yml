@@ -1,4 +1,9 @@
 spring:
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: operations
   datasource:
     url: jdbc:h2:mem:operation
     userName: sa

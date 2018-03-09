@@ -1,7 +1,8 @@
-/**
- * Сборка всех docker-образов
- */
-task buildDockerImage() {
+task dockerImage() {
+    description = "Build docker-images project '$project.path'."
     group = rootProject.dockerTaskGroup
-    dependsOn kafka:buildDockerImage
+    dependsOn = [
+            'kafka:dockerImage',
+            'zookeeper:dockerImage',
+    ]
 }

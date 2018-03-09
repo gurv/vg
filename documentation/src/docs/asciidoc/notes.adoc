@@ -93,6 +93,9 @@ end note
 
 |Хранилище данных
 |8083, 9093 (TCP)
+
+|Потоки данных
+|9393
 |===
 
 == Разработчику
@@ -123,7 +126,7 @@ gradle build
 
 [source]
 ----
-gradle buildDockerImage
+gradle dockerImage
 ----
 [TIP]
 ====
@@ -135,7 +138,7 @@ gradle buildDockerImage
 
 [source]
 ----
-docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.db.local.yml -f docker-compose.dev.services.yml up -d
+docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml up -d
 ----
 [TIP]
 ====
@@ -211,7 +214,7 @@ gradle :config:build
 * Сборка Docker-образа
 [source]
 ----
-gradle :config:buildDockerImage
+gradle :config:dockerImage
 ----
 * Удаление всей сборки
 [source]
@@ -234,7 +237,7 @@ gradle :discovery:bootRun
 * Сборка
 [source]
 ----
-gradle :discovery:buildDockerImage
+gradle :discovery:dockerImage
 ----
 * Сборка Docker-образа
 [source]
@@ -262,7 +265,7 @@ gradle :auth:bootRun
 * Сборка
 [source]
 ----
-gradle :auth:buildDockerImage
+gradle :auth:dockerImage
 ----
 * Сборка Docker-образа
 [source]
@@ -305,7 +308,7 @@ gradle :account:build
 * Сборка Docker-образа
 [source]
 ----
-gradle :account:buildDockerImage
+gradle :account:dockerImage
 ----
 
 * Удаление всей сборки
@@ -314,7 +317,7 @@ gradle :account:buildDockerImage
 gradle :account:clean
 ----
 
-=== Gateway (Gateway)
+=== Шлюз (Gateway)
 
 * Web-консоль сервиса http://localhost:10000/
 
@@ -339,7 +342,7 @@ gradle :gateway:build
 * Сборка Docker-образа
 [source]
 ----
-gradle :gateway:buildDockerImage
+gradle :gateway:dockerImage
 ----
 
 * Удаление всей сборки
@@ -408,6 +411,28 @@ docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.db.docker.yml 
 [source]
 ----
 gradle :database:buildServerDockerImage
+----
+
+=== Потоки данных (Dataflow)
+
+* Web-консоль сервера
+http://localhost:9393/dashboard
+
+* Запуск Zookeeper, Kafka и Dataflow-сервера в Docker-е
+[source]
+----
+docker-compose -f docker-compose.dev.stream.yml -f docker-compose.dev.dataflow.yml up -d
+----
+
+=== Управление приложениями (Skipper)
+
+* API
+http://localhost:7577/api
+
+* Запуск Skipper-сервера в Docker-е
+[source]
+----
+docker-compose -f docker-compose.dev.skipper.yml up -d
 ----
 
 == WEB-приложение

@@ -13,37 +13,56 @@ buildscript {
     }
 }
 
-def databaseProject = project(':database')
-
-def dockerPureProjects() {
-    subprojects.findAll {
-        def hasIncludes = it.path in [
-                ':stream:kafka',
-                ':stream:zookeeper',
-        ]
-        return hasIncludes
-    }
-}
-
-def javaProjects() {
-    subprojects.findAll {
-        def hasExcludes = it.path in [
-                ':web',
-                ':database',
-                ':stream',
-                ':documentation',
-        ]
-        return !hasExcludes
-    } - dockerPureProjects()
-}
-
 configure(rootProject) {
     ext {
-        dockerTaskGroup = 'Docker'
+        maintainer = 'Vladimir Gurinovich <vladimir.gurinovich@gmail.com>'
+
+        springCloudVersion = 'Finchley.M8'
+        springSecurityVersion = '5.0.3.RELEASE'
+        springSecurityOAuthVersion = '2.2.1.RELEASE'
+        springSecurityJwtVersion = '1.0.9.RELEASE'
+        springCloudDataflowServerLocalVersion = '1.4.0.M1'
+        springCloudDataflowShellVersion = '1.3.1.RELEASE'
+        springCloudSkipperServerVersion = '1.0.1.RELEASE'
+        springCloudSkipperShellVersion = '1.0.1.RELEASE'
+        h2Version = '2014-04-05'
+
+        bootProjects = [
+                project(':discovery'),
+                project(':config'),
+                project(':gateway'),
+                project(':auth'),
+                project(':account'),
+                project(':metadata'),
+                project(':sample:operation'),
+                project(':sample:account'),
+        ]
+
+        webProjects = [
+                project(':web'),
+        ]
+
+        dockerProjects = [
+                project(':skipper:server'),
+                project(':skipper:shell'),
+                project(':database:server'),
+                project(':database:data'),
+                project(':stream:kafka'),
+                project(':stream:zookeeper'),
+                project(':dataflow:server'),
+                project(':dataflow:shell'),
+        ]
+
+        documentationProjects = [
+                project(':documentation'),
+        ]
+
+        dockerTaskGroup = 'docker'
     }
 
     task upDockerCompose(type: Exec) {
         group = rootProject.dockerTaskGroup
+
         commandLine "docker-compose", "up"
     }
 }
@@ -57,35 +76,55 @@ configure(subprojects) {
     version = buildNoString
 }
 
-configure(subprojects - databaseProject) {
-    task pushDockerImage(type: Exec) {
-        group = rootProject.dockerTaskGroup
-        commandLine "docker", "push", "gurv/$rootProject.name-$project.name"
+configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProjects) {
+    ext {
+        dockerImageName = "gurv/${rootProject.name}-${project.path.substring(1).replace(':', '-')}:latest"
+        dockerContainerName = "${rootProject.name}-${project.path.substring(1).replace(':', '-')}"
     }
 
-    task runDockerImage(type: Exec) {
+    task dockerImage(type: Exec) {
+        description = "Build docker-image project '$project.path'."
         group = rootProject.dockerTaskGroup
-        commandLine "docker", "run", "-i", "gurv/$rootProject.name-$project.name:latest"
-    }
-}
 
-configure(dockerPureProjects()) {
-    task buildDockerImage(type: Exec) {
-        group = rootProject.dockerTaskGroup
-        def dockerDir = "$project.buildDir/docker"
         doFirst {
             copy {
                 from 'src/main/docker'
-                into "$dockerDir"
+                filter {
+                    it.replace('$$maintainer$$', rootProject.maintainer)
+                            .replace('$$springCloudDataflowShellVersion$$', rootProject.springCloudDataflowShellVersion)
+                            .replace('$$h2Version$$', rootProject.h2Version)
+                            .replace('$$springCloudSkipperServerVersion$$', rootProject.springCloudSkipperServerVersion)
+                            .replace('$$springCloudSkipperShellVersion$$', rootProject.springCloudSkipperShellVersion)
+                }
+                into "$project.buildDir/docker"
             }
         }
+
         commandLine "docker", "build",
-                "-t", "gurv/$rootProject.name-$project.name:latest",
-                "$dockerDir"
+                "-t", project.dockerImageName,
+                "$project.buildDir/docker"
+    }
+
+    task dockerRun(type: Exec) {
+        description = "Run docker-container project '$project.path'."
+        group = rootProject.dockerTaskGroup
+
+        commandLine "docker", "run",
+                "-i",
+                "--name", project.dockerContainerName,
+                project.dockerImageName
+    }
+
+    task dockerPush(type: Exec) {
+        description = "Push docker-image project '$project.path'."
+        group = rootProject.dockerTaskGroup
+
+        commandLine "docker", "push",
+                project.dockerImageName
     }
 }
 
-configure(javaProjects()) {
+configure(project.bootProjects) {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -97,119 +136,39 @@ configure(javaProjects()) {
         maven { url "https://repo.spring.io/milestone" }
     }
 
-    ext {
-        springCloudVersion = 'Finchley.M8'
-        springSecurityVersion = '5.0.3.RELEASE'
-        springSecurityOAuthVersion = '2.2.1.RELEASE'
-        springSecurityJwtVersion = '1.0.9.RELEASE'
-    }
-
-    jar {
-        baseName = rootProject.name + '-' + baseName
-    }
-
     bootJar {
+        baseName = rootProject.name + '-' + baseName
         excludeDevtools = true
     }
 
     dependencyManagement {
         imports {
-            mavenBom "org.springframework.security:spring-security-bom:$springSecurityVersion"
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+            mavenBom "org.springframework.security:spring-security-bom:$rootProject.springSecurityVersion"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$rootProject.springCloudVersion"
         }
         dependencies {
-            dependency "org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuthVersion"
-            dependency "org.springframework.security:spring-security-jwt:$springSecurityJwtVersion"
+            dependency "org.springframework.security.oauth:spring-security-oauth2:$rootProject.springSecurityOAuthVersion"
+            dependency "org.springframework.security:spring-security-jwt:$rootProject.springSecurityJwtVersion"
         }
     }
 
-    task buildDockerImage(type: Exec) {
-        dependsOn build
-        group = rootProject.dockerTaskGroup
-
-        def dockerDir = "$project.buildDir/docker"
-
-        commandLine "docker", "build", "-t", "gurv/$rootProject.name-$project.name:latest", "$dockerDir"
-
-        doFirst {
-            copy {
-                from('src/main/docker') {
-                    include 'Dockerfile'
-                }
-                from("$project.buildDir/libs") {
-                    include "$jar.archiveName"
-                }
-                into "$dockerDir"
-                rename("$jar.archiveName", 'app.jar')
+    dockerImage.doFirst {
+        copy {
+            from("$project.buildDir/libs") {
+                include "$bootJar.archiveName"
             }
+            into "$project.buildDir/docker"
+            rename("$bootJar.archiveName", 'app.jar')
         }
     }
+    dockerImage.dependsOn bootJar
 }
 
-class Dockerfile extends DefaultTask {
+configure(project.dockerProjects) {
+    task clean(type: Delete) {
+        description = "Deletes the build directory."
+        group = BasePlugin.BUILD_GROUP
 
-    def dockerfileInfo = ""
-    def dockerDir = "$project.buildDir/docker"
-    def dockerfileDestination = "$project.buildDir/docker/Dockerfile"
-    def filesToCopy = []
-
-    File getDockerfileDestination() {
-        project.file(dockerfileDestination)
-    }
-
-    def from(image = "java") {
-        dockerfileInfo += "FROM $image\r\n"
-    }
-
-    def maintainer(contact) {
-        dockerfileInfo += "MAINTAINER $contact\r\n"
-    }
-
-    def add(sourceLocation, targetLocation) {
-        filesToCopy << sourceLocation
-        def file = project.file(sourceLocation)
-        dockerfileInfo += "ADD $file.name ${targetLocation}\r\n"
-    }
-
-    def run(command) {
-        dockerfileInfo += "RUN $command\r\n"
-    }
-
-    def volume(path) {
-        dockerfileInfo += "VOLUME $path\r\n"
-    }
-
-    def env(var, value) {
-        dockerfileInfo += "ENV $var $value\r\n"
-    }
-
-    def expose(port) {
-        dockerfileInfo += "EXPOSE $port\r\n"
-    }
-
-    def workdir(dir) {
-        dockerfileInfo += "WORKDIR $dir\r\n"
-    }
-
-    def cmd(command) {
-        dockerfileInfo += "CMD $command\r\n"
-    }
-
-    def entrypoint(command) {
-        dockerfileInfo += "ENTRYPOINT $command\r\n"
-    }
-
-    @TaskAction
-    def writeDockerfile() {
-        for (fileName in filesToCopy) {
-            def source = project.file(fileName)
-            def target = project.file("$dockerDir/$source.name")
-            target.parentFile.mkdirs()
-            target.delete()
-            target << source.bytes
-        }
-        def file = getDockerfileDestination()
-        file.parentFile.mkdirs()
-        file.write dockerfileInfo
+        delete project.buildDir
     }
 }

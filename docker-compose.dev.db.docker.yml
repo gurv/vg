@@ -1,10 +1,14 @@
-version: '2'
+version: '3.4'
 
 services:
   database-data:
-    build: ./database/data
-    container_name: vg_database_data
+    build: ./database/data/build/docker
+    image: gurv/vg-database-data:latest
+    container_name: vg-database-data
 
   database-server:
-    volumes_from:
-      - database-data
+    volumes:
+      - database-data:/tmp
+
+volumes:
+  database-data:
