@@ -59,6 +59,8 @@ configure(rootProject) {
                 project(':documentation'),
         ]
 
+        discoveryProject = project(':discovery')
+
         dockerTaskGroup = 'docker'
     }
 
@@ -162,6 +164,13 @@ configure(project.bootProjects) {
 
     dependencies {
         compile "org.springframework.boot:spring-boot-starter-actuator"
+        testCompile "org.springframework.boot:spring-boot-starter-test"
+    }
+
+    tasks.withType(Test) {
+        if (project != discoveryProject) {
+            systemProperty 'eureka.client.enabled', 'false'
+        }
     }
 
     dockerImage.doFirst {

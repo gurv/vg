@@ -18,7 +18,7 @@ public class EntityTypeServiceImpl implements EntityTypeService {
 
 	@Override
 	public EntityType findByCode(String entityTypeCode) {
-		Assert.hasLength(entityTypeCode);
+		Assert.hasLength(entityTypeCode, "must have length");
 		return repository.findByCode(entityTypeCode);
 	}
 

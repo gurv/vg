@@ -35,7 +35,3 @@ spring:
   h2:
     console:
       path: /db-console
-
-eureka:
-  client:
-    enabled: false

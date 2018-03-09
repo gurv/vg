@@ -4,12 +4,6 @@ server:
 spring:
   application:
     name: metadata
-  cloud:
-    config:
-      fail-fast: true
-      discovery:
-        enabled: true
-        serviceId: config
 
 eureka:
   client:

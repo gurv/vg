@@ -3,12 +3,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost:9093/account;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    #url: jdbc:h2:tcp://localhost:9093/account;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:~/test
     userName: sa
     password:
     driver-class-name: org.h2.Driver
     platform: h2
-    initialize: true
+    initialization-mode: embedded
     continue-on-error: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
@@ -19,7 +20,3 @@ spring:
   h2:
     console:
       path: /db-console
-
-eureka:
-  client:
-    enabled: false

@@ -24,4 +24,4 @@ spring:
       path: /db-console
 eureka:
   client:
-    enabled: false
+    enabled: true
