@@ -95,6 +95,7 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
                             .replace('$$h2Version$$', rootProject.h2Version)
                             .replace('$$springCloudSkipperServerVersion$$', rootProject.springCloudSkipperServerVersion)
                             .replace('$$springCloudSkipperShellVersion$$', rootProject.springCloudSkipperShellVersion)
+                            .replace('$$springCloudDataflowServerLocalVersion$$', rootProject.springCloudDataflowServerLocalVersion)
                 }
                 into "$project.buildDir/docker"
             }
