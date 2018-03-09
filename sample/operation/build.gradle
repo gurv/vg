@@ -11,3 +11,18 @@ dependencies {
     compile 'org.springframework.data:spring-data-rest-hal-browser' //TODO временно
     testCompile 'org.springframework.cloud:spring-cloud-stream-test-support'
 }
+
+ext {
+    dockerPort = 8101
+}
+
+task dockerRun(type: Exec, overwrite: true) {
+    description = "Run docker-container project '$project.path'."
+    group = rootProject.dockerTaskGroup
+
+    commandLine "docker", "run",
+            "-d",
+            "-p", "127.0.0.1:$project.ext.dockerPort:8081",
+            "--name", project.dockerContainerName,
+            project.dockerImageName
+}

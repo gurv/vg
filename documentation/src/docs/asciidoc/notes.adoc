@@ -96,6 +96,9 @@ end note
 
 |Потоки данных
 |9393
+
+|Примеры
+|8101 (SampleOperation), 8102 (SampleAccount)
 |===
 
 == Разработчику
@@ -480,6 +483,12 @@ documentation/build/asciidoc/html5/notes.html
 ----
 
 == Примеры
+
+* Запуск с Zookeeper, Kafka в Docker-е
+[source]
+----
+docker-compose -f docker-compose.dev.stream.yml -f docker-compose.dev.sample.yml up -d
+----
 
 === Операции
 

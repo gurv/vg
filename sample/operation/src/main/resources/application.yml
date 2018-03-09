@@ -1,9 +1,14 @@
+server:
+  port: 8101
 spring:
   cloud:
     stream:
       bindings:
         output:
           destination: operations
+      kafka:
+        binder:
+          brokers: stream-kafka:9092
   datasource:
     url: jdbc:h2:mem:operation
     userName: sa

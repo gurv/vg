@@ -183,6 +183,10 @@ configure(project.bootProjects) {
         }
     }
 
+    bootRun {
+        systemProperty 'spring.cloud.stream.kafka.binder.brokers', 'localhost:9092'
+    }
+
     dockerImage.doFirst {
         copy {
             from("$project.buildDir/libs") {
