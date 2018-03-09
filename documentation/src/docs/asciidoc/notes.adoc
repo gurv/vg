@@ -196,6 +196,8 @@ gradle clean
 
 http://localhost:8888/discovery/default
 
+* http://localhost:8888/actuator/info[actuator]
+
 * Запуск (в примере - версия 0.1.0)
 [source]
 ----

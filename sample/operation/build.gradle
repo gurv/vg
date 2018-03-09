@@ -9,7 +9,6 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'com.h2database:h2' //TODO убрать в dev-режим
     compile 'org.springframework.data:spring-data-rest-hal-browser' //TODO временно
-    compile "org.springframework.boot:spring-boot-starter-actuator"
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
