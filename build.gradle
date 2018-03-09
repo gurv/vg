@@ -27,10 +27,12 @@ configure(rootProject) {
         springCloudDataflowShellVersion = '1.3.1.RELEASE'
         springCloudSkipperServerVersion = '1.0.1.RELEASE'
         springCloudSkipperShellVersion = '1.0.1.RELEASE'
+        springfoxVersion = '2.8.0'
         h2Version = '2014-04-05'
         groovyVersion = '2.4.7'
 
         bootProjects = [
+                project(':api:swagger-aggregate'),
                 project(':discovery'),
                 project(':config'),
                 project(':gateway'),
@@ -162,6 +164,8 @@ configure(project.bootProjects) {
         dependencies {
             dependency "org.springframework.security.oauth:spring-security-oauth2:$rootProject.springSecurityOAuthVersion"
             dependency "org.springframework.security:spring-security-jwt:$rootProject.springSecurityJwtVersion"
+            dependency "io.springfox:springfox-swagger-ui:$rootProject.springfoxVersion"
+            dependency "io.springfox:springfox-swagger2:$rootProject.springfoxVersion"
         }
     }
 
