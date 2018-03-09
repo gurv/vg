@@ -28,6 +28,7 @@ configure(rootProject) {
         springCloudSkipperServerVersion = '1.0.1.RELEASE'
         springCloudSkipperShellVersion = '1.0.1.RELEASE'
         h2Version = '2014-04-05'
+        groovyVersion = '2.4.7'
 
         bootProjects = [
                 project(':discovery'),
@@ -132,6 +133,7 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
 
 configure(project.bootProjects) {
     apply plugin: 'java'
+    apply plugin: 'groovy'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.gorylenko.gradle-git-properties'
@@ -164,6 +166,9 @@ configure(project.bootProjects) {
     }
 
     dependencies {
+        // groovy
+        compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+
         compile "org.springframework.boot:spring-boot-starter-actuator"
         testCompile "org.springframework.boot:spring-boot-starter-test"
     }
