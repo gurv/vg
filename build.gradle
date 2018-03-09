@@ -45,6 +45,7 @@ configure(rootProject) {
         ]
 
         dockerProjects = [
+                project(':api:swagger-ui'),
                 project(':skipper:server'),
                 project(':skipper:shell'),
                 project(':database:server'),

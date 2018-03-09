@@ -1,0 +1,14 @@
+ext {
+    dockerPort = 8081
+}
+
+task dockerRun(type: Exec, overwrite: true) {
+    description = "Run docker-container project '$project.path'."
+    group = rootProject.dockerTaskGroup
+
+    commandLine "docker", "run",
+            "-d",
+            "-p", "127.0.0.1:$project.ext.dockerPort:8080",
+            "--name", project.dockerContainerName,
+            project.dockerImageName
+}

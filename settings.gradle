@@ -1,5 +1,6 @@
 rootProject.name = 'vg'
 
+include 'api:swagger-ui'
 include 'discovery'
 include 'config'
 include 'gateway'

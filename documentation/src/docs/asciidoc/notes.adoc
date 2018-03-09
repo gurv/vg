@@ -437,6 +437,17 @@ http://localhost:7577/api
 docker-compose -f docker-compose.dev.skipper.yml up -d
 ----
 
+=== API
+
+* Swagger-UI
+http://localhost:8081
+
+* Запуск Swagger-UI в Docker-е
+[source]
+----
+docker-compose -f docker-compose.dev.api.yml up -d
+----
+
 == WEB-приложение
 
 * Запуск в dev-режиме
