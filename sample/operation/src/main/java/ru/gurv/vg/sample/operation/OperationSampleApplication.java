@@ -12,6 +12,7 @@ import org.springframework.integration.annotation.Poller;
 import org.springframework.integration.core.MessageSource;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.Date;
 @SpringBootApplication
 @EnableBinding(Source.class)
 @EnableScheduling
+@EnableSwagger2
 public class OperationSampleApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationSampleApplication.class);

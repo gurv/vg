@@ -7,3 +7,16 @@ services:
     container_name: vg-api-swagger-ui
     ports:
       - 8081:8080
+    links:
+      - api-swagger-aggregate
+
+  api-swagger-aggregate:
+    build: ./api/swagger-aggregate/build/docker
+    image: gurv/vg-api-swagger-aggregate:latest
+    container_name: vg-api-swagger-aggregate
+    ports:
+      - 8084:8084
+    links:
+      - sample-operation
+      - sample-account
+#FIXME http://localhost:8084/swagger-ui.html -> "Failed to load API definition."
