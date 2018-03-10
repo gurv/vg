@@ -138,7 +138,13 @@ configure(project.bootProjects) {
     apply plugin: 'groovy'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'com.gorylenko.gradle-git-properties'
+    //FIXME сборка swagger-aggregate с ошибкой java.io.IOException: Not a ref: refs/remotes/origin/master
+    /*
+        gradle api:swagger-aggregate:build
+
+        возможно из за groovy в проекте api:swagger-aggregate
+     */
+    //apply plugin: 'com.gorylenko.gradle-git-properties'
 
     sourceCompatibility = '1.8'
 
