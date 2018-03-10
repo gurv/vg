@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix="documentation.swagger")
 class SwaggerAggregateServicesConfig {
 
-    List<SwaggerService> services;
+    List<SwaggerService> services
 
     static class SwaggerService {
         String name
