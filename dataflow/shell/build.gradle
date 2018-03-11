@@ -1,3 +1,42 @@
+apply plugin: 'application'
+
+// Отключение ненужных задач
+[jar, startScripts, distZip, distTar].each { it.enabled = false }
+
+configurations {
+    appJar
+}
+
+dependencies {
+    appJar module("org.springframework.cloud:spring-cloud-dataflow-shell") {
+        transitive = false
+    }
+}
+
+task copyAppJar(type: Copy) {
+    description = "Copy application-jar project '$project.path'."
+    group = BasePlugin.BUILD_GROUP
+    from configurations.appJar
+    into "$buildDir/libs"
+}
+build.dependsOn copyAppJar
+
+mainClassName = "org.springframework.cloud.dataflow.shell.ShellApplication"
+
+run {
+    standardInput = System.in
+    jvmArgs "-jar",  "$buildDir/libs/spring-cloud-dataflow-shell-${rootProject.springCloudDataflowVersion}.jar"
+}
+run.dependsOn build
+
+dockerImage.doFirst {
+    copy {
+        from "$project.buildDir/libs"
+        into "$project.buildDir/docker"
+        rename { 'app.jar' }
+    }
+}
+
 task dockerRun(overwrite: true) {
     description = "Run docker-container project '$project.path'."
     group = rootProject.dockerTaskGroup
@@ -8,7 +47,4 @@ task dockerRun(overwrite: true) {
     // И затем выполнить из shell следующее:
     // dataflow config server http://server:9393
     //FIXME но после выполнения, например, "dataflow config info" возникает ошибка "New state of 'nil' is invalid."
-
-    // Локалный запуск (скачать http://central.maven.org/maven2/org/springframework/cloud/spring-cloud-dataflow-shell/1.3.1.RELEASE/spring-cloud-dataflow-shell-1.3.1.RELEASE.jar)
-    // java.exe -jar spring-cloud-dataflow-shell-1.3.1.RELEASE.jar
 }

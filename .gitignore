@@ -3,3 +3,4 @@ build
 .idea
 *.iml
 web/last-build
+spring-shell.log
