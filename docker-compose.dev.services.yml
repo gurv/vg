@@ -34,7 +34,7 @@ services:
     ports:
      - 5000:5000
     links:
-      - vg-database-server
+      - vg-database-server-h2
       - vg-config
       - vg-discovery
       - vg-gateway
@@ -46,7 +46,7 @@ services:
     ports:
      - 8081:8081
     links:
-      - database-server
+      - database-server-h2
       - config
       - discovery
       - gateway

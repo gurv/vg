@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   api-swagger-ui:
-    build: ./api/swagger-ui/build/docker
+    build: ./api-swagger-ui/build/docker
     image: gurv/vg-api-swagger-ui:latest
     container_name: vg-api-swagger-ui
     ports:
@@ -11,7 +11,7 @@ services:
       - api-swagger-aggregate
 
   api-swagger-aggregate:
-    build: ./api/swagger-aggregate/build/docker
+    build: ./api-swagger-aggregate/build/docker
     image: gurv/vg-api-swagger-aggregate:latest
     container_name: vg-api-swagger-aggregate
     ports:

@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   dataflow-server:
-    build: ./dataflow/server/build/docker
+    build: ./dataflow-server/build/docker
     image: gurv/vg-dataflow-server:latest
     container_name: vg-dataflow-server
     ports:

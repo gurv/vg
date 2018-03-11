@@ -1,10 +1,10 @@
 version: '3.4'
 
 services:
-  database-server:
-    build: ./database/server/build/docker
-    image: gurv/vg-database-server:latest
-    container_name: vg-database-server
+  database-server-h2:
+    build: ./database-server-h2/build/docker
+    image: gurv/vg-database-server-h2:latest
+    container_name: vg-database-server-h2
     ports:
       - 8083:8083 # web
       - 9093:9093 # tcp

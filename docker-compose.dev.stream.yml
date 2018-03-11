@@ -3,7 +3,7 @@ version: '3.4'
 services:
   # zookeeper
   stream-zookeeper:
-    build: ./stream/zookeeper/build/docker
+    build: ./stream-zookeeper/build/docker
     image: gurv/vg-stream-zookeeper:latest
     container_name: vg-stream-zookeeper
     ports:
@@ -13,7 +13,7 @@ services:
 
   # kafka
   stream-kafka:
-    build: ./stream/kafka/build/docker
+    build: ./stream-kafka/build/docker
     image: gurv/vg-stream-kafka:latest
     container_name: vg-stream-kafka
     ports:

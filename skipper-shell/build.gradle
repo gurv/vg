@@ -1,0 +1,50 @@
+apply plugin: 'application'
+
+// Отключение ненужных задач
+[jar, startScripts, distZip, distTar].each { it.enabled = false }
+
+configurations {
+    appJar
+}
+
+dependencies {
+    appJar module("org.springframework.cloud:spring-cloud-skipper-shell") {
+        transitive = false
+    }
+}
+
+task copyAppJar(type: Copy) {
+    description = "Copy application-jar project '$project.path'."
+    group = BasePlugin.BUILD_GROUP
+    from configurations.appJar
+    into "$buildDir/libs"
+}
+build.dependsOn copyAppJar
+
+mainClassName = "org.springframework.cloud.skipper.shell.ShellApplication"
+
+run {
+    standardInput = System.in
+    jvmArgs "-jar",  "$buildDir/libs/spring-cloud-skipper-shell-${rootProject.springCloudSkipperVersion}.jar"
+}
+run.dependsOn build
+
+dockerImage.doFirst {
+    copy {
+        from "$project.buildDir/libs"
+        into "$project.buildDir/docker"
+        rename { 'app.jar' }
+    }
+}
+
+task dockerRun(overwrite: true) {
+    description = "Run docker-container project '$project.path'."
+    group = rootProject.dockerTaskGroup
+
+    // Невозможен запуск этого образа из gradle, т.к. используются опции -i -t
+    // Можно выполнить из cmd следующее:
+    // docker run -i -t --name vg-skipper-shell --link vg-skipper-server:server gurv/vg-skipper-shell:latest
+    // И затем выполнить из shell следующее:
+    // skipper config uri http://server:7577/api
+    //FIXME после этого возникает ошибка "Host name may not be null"
+}
