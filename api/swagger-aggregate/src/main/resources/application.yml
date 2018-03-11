@@ -5,10 +5,10 @@ documentation:
   swagger:
     services:
       -
-        name: Sample Operation
-        url: http://sample-operation/v2/swagger.json
+        name: "[sample] Operation"
+        url: http://localhost:8101/v2/api-docs
         version: 2.0
-      - 
-        name: Human Service
-        url: http://sample-account/v2/swagger.json
+      -
+        name: "[sample] Account"
+        url: http://localhost:8102/v2/api-docs
         version: 2.0

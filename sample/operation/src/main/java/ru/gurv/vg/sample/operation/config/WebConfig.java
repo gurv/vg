@@ -34,7 +34,8 @@ public class WebConfig implements WebMvcConfigurer {
         config.addAllowedMethod("*");
 
         // Swagger
-        source.registerCorsConfiguration("/v2/api-docs", config);
+        //TODO для Swagger-а достаточно "/v2/api-docs", а здесь все для вызова API из swagger-ui
+        source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }
