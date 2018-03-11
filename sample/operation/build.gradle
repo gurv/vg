@@ -23,7 +23,7 @@ task dockerRun(type: Exec, overwrite: true) {
 
     commandLine "docker", "run",
             "-d",
-            "-p", "127.0.0.1:$project.ext.dockerPort:8081",
+            "-p", "127.0.0.1:$project.ext.dockerPort:8101",
             "--name", project.dockerContainerName,
             project.dockerImageName
 }
