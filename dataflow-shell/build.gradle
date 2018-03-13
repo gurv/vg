@@ -1,50 +1,22 @@
-apply plugin: 'application'
-
-// Отключение ненужных задач
-[jar, startScripts, distZip, distTar].each { it.enabled = false }
-
-configurations {
-    appJar
-}
-
 dependencies {
-    appJar module("org.springframework.cloud:spring-cloud-dataflow-shell") {
+    extJar module("org.springframework.cloud:spring-cloud-dataflow-shell") {
         transitive = false
     }
 }
 
-task copyAppJar(type: Copy) {
-    description = "Copy application-jar project '$project.path'."
-    group = BasePlugin.BUILD_GROUP
-    from configurations.appJar
-    into "$buildDir/libs"
+ext {
+    jarName = "spring-cloud-dataflow-shell-${rootProject.springCloudDataflowVersion}.jar"
 }
-build.dependsOn copyAppJar
-
-mainClassName = "org.springframework.cloud.dataflow.shell.ShellApplication"
 
 run {
     standardInput = System.in
-    jvmArgs "-jar",  "$buildDir/libs/spring-cloud-dataflow-shell-${rootProject.springCloudDataflowVersion}.jar"
+    jvmArgs "-jar",  "$buildDir/libs/$jarName"
 }
 run.dependsOn build
 
-dockerImage.doFirst {
-    copy {
-        from "$project.buildDir/libs"
-        into "$project.buildDir/docker"
-        rename { 'app.jar' }
-    }
-}
-
-task dockerRun(overwrite: true) {
-    description = "Run docker-container project '$project.path'."
-    group = rootProject.dockerTaskGroup
-
-    // Невозможен запуск этого образа из gradle, т.к. используются опции -i -t
-    // Можно выполнить из cmd следующее:
-    // docker run -i -t --name vg-dataflow-shell --link vg-dataflow-server:server gurv/vg-dataflow-shell:latest
-    // И затем выполнить из shell следующее:
-    // dataflow config server http://server:9393
-    //FIXME но после выполнения, например, "dataflow config info" возникает ошибка "New state of 'nil' is invalid."
-}
+// dockerRun - невозможен запуск этого образа из gradle, т.к. используются опции -i -t
+// Можно выполнить из cmd следующее:
+// docker run -i -t --name vg-dataflow-shell --link vg-dataflow:server gurv/vg-dataflow-shell:latest
+// И затем выполнить из shell следующее:
+// dataflow config server http://server:9393
+//FIXME но после выполнения, например, "dataflow config info" возникает ошибка "New state of 'nil' is invalid."

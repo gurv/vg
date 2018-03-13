@@ -1,6 +1,0 @@
-version: '3.4'
-
-services:
-  database-server-h2:
-    volumes:
-      - ./.dev/db_data:/db_data

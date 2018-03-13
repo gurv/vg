@@ -1,1 +1,4 @@
 # Авторизация
+
+FIXME в задачах bootRun и dockerRun сервер tomcat стартует на порту 8080 (при этом в bootstrap.yml указан 5000).
+И http://localhost:8080/actuator/prometheus не работает.

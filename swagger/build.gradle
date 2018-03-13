@@ -1,0 +1,17 @@
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'io.springfox:springfox-swagger2'
+    compile 'io.springfox:springfox-swagger-ui'
+}
+
+bootRun {
+    systemProperties = [
+            'spring.cloud.config.enabled': false,
+            'eureka.client.enabled'      : false,
+    ]
+}
+
+dockerRun {
+    ports '8084'
+    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false'
+}

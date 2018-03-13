@@ -21,7 +21,3 @@ encrypt:
 endpoints:
   restart:
     enabled: true
-  shutdown:
-    enabled: true
-  health:
-    sensitive: false

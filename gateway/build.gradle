@@ -3,3 +3,15 @@ dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
     compile 'org.springframework.cloud:spring-cloud-netflix-sidecar'
 }
+
+bootRun {
+    args = [
+            "--spring.cloud.config.fail-fast=false",
+            "--eureka.client.enabled=false",
+    ]
+}
+
+dockerRun {
+    ports '10000'
+    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false'
+}

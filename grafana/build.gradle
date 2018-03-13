@@ -1,0 +1,10 @@
+dockerRun {
+    ports '3000'
+}
+
+dockerPrepare.doLast {
+    copy {
+        from 'src/main/grafana'
+        into "$project.buildDir/docker/grafana"
+    }
+}

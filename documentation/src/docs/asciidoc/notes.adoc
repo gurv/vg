@@ -66,7 +66,7 @@ end note
 [DbServer] -- [DbData] : Docker Storage Volume
 ....
 
-* Порты сервисов
+=== Порты
 
 [cols="2*", options="header"]
 |===
@@ -98,7 +98,10 @@ end note
 |9393
 
 |API
-|8084 (SwaggerAggregate)
+|8084 (Swagger)
+
+|Monitoring
+|9090 (Prometheus), 9091 (PushGateway), 9182 (WMI Exporter), 9100 (Node Exporter), 3000 (Grafana)
 
 |Примеры
 |8101 (SampleOperation), 8102 (SampleAccount)
@@ -118,6 +121,8 @@ end note
 [Asciidoc] ..> [Java]
 [Asciidoc] ..> [GraphViz]
 [Webpack] ..> [NodeJS]
+[Angular] ..> [NodeJS]
+[Angular] ..> [Webpack]
 ....
 
 * Сборка
@@ -402,60 +407,98 @@ http://localhost:8083
 * jdbc:h2:tcp://database-server:9093/account
 ====
 
-* Запуск DB-сервера в Docker-е с локальным DB-хранилищем
-[source]
-----
-docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.db.local.yml up -d
-----
-[TIP]
-====
-Файлы локального DB-хранилища размещаютя в каталоге ./.dev/db_data
-====
-
-* Запуск DB-сервера в Docker-е с Docker-DB-хранилищем
-[source]
-----
-docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.db.docker.yml up -d
-----
-
-* Сборка Docker-образа DB-сервера
-[source]
-----
-gradle :database:buildServerDockerImage
-----
-
 === Потоки данных (Dataflow)
 
 * Web-консоль сервера
 http://localhost:9393/dashboard
-
-* Запуск Zookeeper, Kafka и Dataflow-сервера в Docker-е
-[source]
-----
-docker-compose -f docker-compose.dev.stream.yml -f docker-compose.dev.dataflow.yml up -d
-----
 
 === Управление приложениями (Skipper)
 
 * API
 http://localhost:7577/api
 
-* Запуск Skipper-сервера в Docker-е
+=== Мониторинг
+
+* UI:
+http://localhost:3000[Grafana],
+http://localhost:9090[Prometheus]
+
+* Запуск/останов
 [source]
 ----
-docker-compose -f docker-compose.dev.skipper.yml up -d
+gradle dockerMonitoringStart
+gradle dockerMonitoringStop
 ----
 
-=== API
+[TIP]
+====
+TODO WMI Exporter: запуск из gradle
 
-* Swagger-UI
-http://localhost:8081
+TODO WMI Exporter: доступность длч Prometheus, который в docker-контейнере (--net=host ...)
 
-* Запуск Swagger-UI в Docker-е
 [source]
 ----
-docker-compose -f docker-compose.dev.api.yml up -d
+C:/app/wmi_exporter-0.2.10/wmi_exporter.exe
 ----
+====
+
+
+* Полезное
+
+[plantuml, monitoring, png]
+....
+[Prometheus]
+[Grafana]
+[Prometheus]
+[WMI Exporter]
+[Node Exporter]
+[PushGateway]
+[service] << SpringBoot-application >>
+[Prometheus] ..> [Prometheus]
+note on link:  9090
+[Prometheus] ..> [Grafana]
+note on link:  3000
+[Prometheus] ..> [Docker Engine]
+note on link:  9323
+[Prometheus] ..> [WMI Exporter]
+note on link:  9182
+[Prometheus] ..> [Node Exporter]
+note on link:  9100
+[WMI Exporter] ..> [Windows]
+[Node Exporter] ..> [Unix]
+[PushGateway] ..> [service]
+[PushGateway] ..> [Prometheus]
+....
+
+Метрики:
+http://localhost:9323/metrics[Docker],
+http://localhost:3000/metrics[Grafana],
+http://localhost:9090/metrics[Prometheus],
+http://localhost:1233/metrics[Zookeeper],
+http://localhost:1234/metrics[Kafka],
+http://localhost:9393/management/prometheus[Dataflow],
+http://localhost:8084/actuator/prometheus[Swagger],
+http://localhost:8888/actuator/prometheus[Config],
+http://localhost:8761/actuator/prometheus[Discovery],
+http://localhost:10000/actuator/prometheus[Gateway],
+http://localhost:8081/actuator/prometheus[Account],
+http://localhost:8082/actuator/prometheus[Metadata]
+
+Запуск Prometheus в Docker-е:
+[source]
+----
+docker run -d -p 9090:9090 -v C:/prj/vg/prometheus/build/prometheus.yml:/etc/prometheus/prometheus.yml --name=vg-prometheus gurv/vg-prometheus
+----
+или
+[source]
+----
+gradle prometheus:dockerRun
+----
+
+=== API (Swagger)
+
+* Swagger
+http://localhost:8084/swagger-ui.html
 
 == WEB-приложение
 
@@ -490,10 +533,16 @@ documentation/build/asciidoc/html5/notes.html
 
 == Примеры
 
-* Запуск с Zookeeper, Kafka, SwaggerAggregate в Docker-е
+* Запуск/останов/уборка БД, Zookeeper, Kafka, Dataflow, мониторинг и Swagger в Docker-е
 [source]
 ----
-docker-compose -f docker-compose.dev.stream.yml -f docker-compose.dev.api.yml -f docker-compose.dev.sample.yml up -d
+docker stack deploy -c docker-stack.dev.db.yml vg
+docker stack deploy -c docker-stack.dev.stream.yml vg
+docker stack deploy -c docker-stack.dev.dataflow.yml vg
+docker stack deploy -c docker-stack.dev.monitoring.yml vg
+docker stack deploy -c docker-stack.dev.api.yml vg
+docker stack rm vg
+docker volume prune --force
 ----
 
 === Операции

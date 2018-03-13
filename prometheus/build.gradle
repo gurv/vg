@@ -1,0 +1,10 @@
+dockerRun {
+    ports '9090'
+}
+
+dockerPrepare.doLast {
+    copy {
+        from 'src/main/prometheus'
+        into "$project.buildDir/docker/prometheus"
+    }
+}

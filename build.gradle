@@ -12,6 +12,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21")
+        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2")
     }
 }
 
@@ -26,11 +27,19 @@ configure(rootProject) {
         springCloudDataflowVersion = '1.4.0.RC1'
         springCloudSkipperVersion = '1.0.1.RELEASE'
         springfoxVersion = '2.8.0'
+        micrometerPometheusVersion = '1.0.2'
+        prometheusVersion = 'v2.2.1'
+        prometheusWmiExporterVersion = '0.2.10'
+        grafanaVersion = '5.0.3'
         h2Version = '2014-04-05'
         groovyVersion = '2.4.7'
+        micrometerSpringLegacyVersion = '1.0.2'
 
+        prometheusWmiExporter = findProperty('prometheusWmiExporter') ?: "C:/app/wmi_exporter-$prometheusWmiExporterVersion/wmi_exporter.exe"
+
+        // проекты нв Spring Boot
         bootProjects = [
-                project(':api-swagger-aggregate'),
+                project(':swagger'),
                 project(':discovery'),
                 project(':config'),
                 project(':gateway'),
@@ -41,21 +50,34 @@ configure(rootProject) {
                 project(':sample:account'),
         ]
 
-        webProjects = [
-                project(':web'),
+        // готовые загружаемые (например, из Maven Central) jar-сборки проектов нв Spring Boot
+        bootJarProjects = [
+                project(':skipper'),
+                project(':skipper-shell'),
+                project(':dataflow'),
+                project(':dataflow-shell'),
         ]
 
+        // monitoring & spring boot 1.5
+        monitoringOldBootProjects = [
+                project(':dataflow'),
+                project(':skipper'),
+        ]
+
+        // готовые загружаемые (например, из Docker Hub) docker-образы, в обертке этого проекта (напримеп, wurstmeister/kafka -> gurv/vg-kafka)
         dockerProjects = [
-                project(':api-swagger-ui'),
-                project(':skipper-server'),
-                project(':skipper-shell'),
-                project(':database-server-h2'),
-                project(':database-data'),
-                project(':stream-kafka'),
-                project(':stream-zookeeper'),
-                project(':dataflow-server'),
-                project(':dataflow-shell'),
+                project(':database'),
+                project(':kafka'),
+                project(':zookeeper'),
+                project(':prometheus'),
+                project(':grafana'),
                 project(':docker-registry'),
+                project(':dataflow-shell'),
+                project(':skipper-shell'),
+        ]
+
+        webProjects = [
+                project(':web'),
         ]
 
         documentationProjects = [
@@ -110,56 +132,64 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
             dependency "org.springframework.security:spring-security-jwt:$rootProject.springSecurityJwtVersion"
             dependency "io.springfox:springfox-swagger-ui:$rootProject.springfoxVersion"
             dependency "io.springfox:springfox-swagger2:$rootProject.springfoxVersion"
+            dependency "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerPometheusVersion"
         }
     }
 
     ext {
         dockerImageName = "gurv/${rootProject.name}-${project.path.substring(1).replace(':', '-')}:latest"
         dockerContainerName = "${rootProject.name}-${project.path.substring(1).replace(':', '-')}"
+        dockerImageBuildArgs = []
     }
 
-    task dockerImage(type: Exec) {
-        description = "Build docker-image project '$project.path'."
-        group = rootProject.dockerTaskGroup
-        dependsOn build
-
-        doFirst {
-            copy {
-                from 'src/main/docker'
-                filter {
-                    it.replace('$$maintainer$$', rootProject.maintainer)
-                            .replace('$$h2Version$$', rootProject.h2Version)
-                            .replace('$$springCloudSkipperVersion$$', rootProject.springCloudSkipperVersion)
-                            .replace('$$springCloudDataflowVersion$$', rootProject.springCloudDataflowVersion)
-                }
-                into "$project.buildDir/docker"
+    build.doLast {
+        copy {
+            from 'src/main/docker'
+            filter {
+                it
+                        .replace('$$maintainer$$', rootProject.maintainer)
+                        .replace('$$h2Version$$', rootProject.h2Version)
+                        .replace('$$springCloudSkipperVersion$$', rootProject.springCloudSkipperVersion)
+                        .replace('$$springCloudDataflowVersion$$', rootProject.springCloudDataflowVersion)
+                        .replace('$$grafanaVersion$$', rootProject.grafanaVersion)
+                        .replace('$$prometheusVersion$$', rootProject.prometheusVersion)
             }
+            into "$project.buildDir/docker"
         }
-
-        commandLine "docker", "build",
-                "-t", project.dockerImageName,
-                "$project.buildDir/docker"
     }
 
-    task dockerRun(type: Exec) {
-        description = "Run docker-container project '$project.path'."
-        group = rootProject.dockerTaskGroup
+    apply plugin: 'com.palantir.docker'
+    apply plugin: 'com.palantir.docker-run'
 
-        commandLine "docker", "run",
-                "-i",
-                "--name", project.dockerContainerName,
-                project.dockerImageName
+    docker {
+        name project.dockerImageName
+        files "$project.buildDir/dockerfile", "$project.buildDir/libs"
     }
 
-    task dockerPush(type: Exec) {
-        description = "Push docker-image project '$project.path'."
-        group = rootProject.dockerTaskGroup
+    build.doLast {
+        copy {
+            from 'src/main/docker'
+            filter {it
+                    .replace('$$maintainer$$', rootProject.maintainer)
+                    .replace('$$h2Version$$', rootProject.h2Version)
+                    .replace('$$springCloudSkipperVersion$$', rootProject.springCloudSkipperVersion)
+                    .replace('$$springCloudDataflowVersion$$', rootProject.springCloudDataflowVersion)
+                    .replace('$$grafanaVersion$$', rootProject.grafanaVersion)
+                    .replace('$$prometheusVersion$$', rootProject.prometheusVersion)
+            }
+            into "$project.buildDir/dockerfile"
+        }
+    }
 
-        commandLine "docker", "push",
-                project.dockerImageName
+    dockerPrepare.dependsOn build
+
+    dockerRun {
+        name project.dockerContainerName
+        image project.dockerImageName
     }
 }
 
+//TODO убрать в файл bootProjects.gradle
 configure(project.bootProjects) {
     apply plugin: 'java'
     apply plugin: 'groovy'
@@ -184,10 +214,13 @@ configure(project.bootProjects) {
     }
 
     dependencies {
+        // monitoring
+        compile "org.springframework.boot:spring-boot-starter-actuator"
+        runtime 'io.micrometer:micrometer-registry-prometheus'
+
         // groovy
         compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
-        compile "org.springframework.boot:spring-boot-starter-actuator"
         testCompile "org.springframework.boot:spring-boot-starter-test"
     }
 
@@ -200,19 +233,68 @@ configure(project.bootProjects) {
     bootRun {
         systemProperty 'spring.cloud.stream.kafka.binder.brokers', 'localhost:9092'
     }
+}
 
-    dockerImage.doFirst {
+configure(project.bootJarProjects) {
+    configurations {
+        extJar
+    }
+
+    build.doLast {
         copy {
-            from("$project.buildDir/libs") {
-                include "$bootJar.archiveName"
-            }
-            into "$project.buildDir/docker"
-            rename("$bootJar.archiveName", 'app.jar')
+            from configurations.extJar
+            into "$buildDir/libs"
+        }
+
+        copy {
+            from "$project.buildDir/resources/main"
+            into "$project.buildDir/libs"
         }
     }
-    dockerImage.dependsOn bootJar
+
+    apply plugin: 'application'
+
+    // Отключение ненужных задач
+    [jar, startScripts, distZip, distTar].each { it.enabled = false }
+}
+
+configure(project.monitoringOldBootProjects) {
+    configurations {
+        monitoringOldBoot
+    }
+
+    dependencies {
+        monitoringOldBoot "io.micrometer:micrometer-spring-legacy:$rootProject.micrometerSpringLegacyVersion"
+        monitoringOldBoot "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerSpringLegacyVersion"
+    }
+
+    build.doLast {
+        copy {
+            from configurations.monitoringOldBoot
+            into "$buildDir/libs/monitoring"
+        }
+    }
 }
 
 configure(project.dockerProjects) {
     apply plugin: 'base'
+}
+
+task dockerMonitoringStart(type: Exec, overwrite: true) {
+    description = "Run monitoring"
+    group = rootProject.dockerTaskGroup
+
+    commandLine "docker-compose",
+            "-f", "docker-compose.dev.monitoring.yml",
+            "up",
+            "-d"
+}
+
+task dockerMonitoringStop(type: Exec, overwrite: true) {
+    description = "Stop monitoring"
+    group = rootProject.dockerTaskGroup
+
+    commandLine "docker-compose",
+            "-f", "docker-compose.dev.monitoring.yml",
+            "stop"
 }

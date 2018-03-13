@@ -2,3 +2,8 @@ dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 }
+
+dockerRun {
+    ports '8761'
+    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false'
+}

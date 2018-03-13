@@ -1,0 +1,3 @@
+dockerRun {
+    ports '2181'
+}

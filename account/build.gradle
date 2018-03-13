@@ -9,16 +9,16 @@ dependencies {
     compile 'com.h2database:h2'
 }
 
-bootJar {
-	manifest {
-		attributes 'Main-Class': 'ru.gurv.vg.account.AccountApplication'
-	}
-}
-
 bootRun {
     systemProperties = [
-            'spring.cloud.config.enabled'  : false,
-            'spring.datasource.url'        : 'jdbc:h2:mem:account',
-            'spring.h2.console.enabled'    : true
+            'spring.cloud.config.enabled': false,
+            'eureka.client.enabled'      : false,
+            'spring.datasource.url'      : 'jdbc:h2:mem:account',
+            'spring.h2.console.enabled'  : true
     ]
+}
+
+dockerRun {
+    ports '8081'
+    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false -Dspring.datasource.url=jdbc:h2:mem:account'
 }

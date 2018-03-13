@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  swagger:
+    image: gurv/vg-swagger:latest
+    ports:
+      - "8084:8084"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager

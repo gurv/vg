@@ -1,9 +1,0 @@
-version: '3.4'
-
-services:
-  dataflow-server:
-    build: ./skipper-server/build/docker
-    image: gurv/vg-skipper-server:latest
-    container_name: vg-skipper-server
-    ports:
-      - 7577:7577

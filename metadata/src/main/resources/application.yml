@@ -14,3 +14,9 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
 profiles:
      active: native
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

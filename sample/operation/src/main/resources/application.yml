@@ -8,7 +8,7 @@ spring:
           destination: operations
       kafka:
         binder:
-          brokers: stream-kafka:9092
+          brokers: kafka:9092
   datasource:
     url: jdbc:h2:mem:operation
     userName: sa

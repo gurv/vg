@@ -12,3 +12,15 @@ dependencies {
     testCompile('io.projectreactor:reactor-test')
     testCompile('org.springframework.security:spring-security-test')
 }
+
+bootRun {
+    systemProperties = [
+            'spring.cloud.config.enabled': false,
+            'eureka.client.enabled'      : false,
+    ]
+}
+
+dockerRun {
+    ports '5000'
+    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false'
+}

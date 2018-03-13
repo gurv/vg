@@ -20,3 +20,9 @@ spring:
   h2:
     console:
       path: /db-console
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

@@ -1,0 +1,28 @@
+dependencies {
+    extJar module("org.springframework.cloud:spring-cloud-dataflow-server-local") {
+        transitive = false
+    }
+}
+
+ext {
+    jarName = "spring-cloud-dataflow-server-local-${rootProject.springCloudDataflowVersion}.jar"
+}
+
+mainClassName = "org.springframework.cloud.dataflow.server.local.LocalDataFlowServer"
+
+task run(type: JavaExec, overwrite: true) {
+    workingDir "$buildDir/libs"
+    classpath files("$buildDir/libs/$jarName")
+    jvmArgs "-Dloader.path=monitoring"
+    jvmArgs "-Dloader.config.location=application.yml"
+    main = 'org.springframework.boot.loader.PropertiesLauncher'
+}
+run.dependsOn build
+
+docker {
+    buildArgs([jar: jarName])
+}
+
+dockerRun {
+    ports '9393'
+}
