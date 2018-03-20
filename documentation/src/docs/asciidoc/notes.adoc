@@ -102,6 +102,9 @@ end note
 
 |Примеры
 |8101 (SampleOperation), 8102 (SampleAccount)
+
+|Разное
+|5000 (Docker Registry)
 |===
 
 == Разработчику

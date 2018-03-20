@@ -55,6 +55,7 @@ configure(rootProject) {
                 project(':stream-zookeeper'),
                 project(':dataflow-server'),
                 project(':dataflow-shell'),
+                project(':docker-registry'),
         ]
 
         documentationProjects = [
