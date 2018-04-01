@@ -21,7 +21,7 @@ scrape_configs:
   - job_name: 'jmx'
     scrape_interval: 5s
     static_configs:
-      - targets: ['zookeeper:1233', 'kafka:1234', 'database:1235']
+      - targets: ['zookeeper:1233', 'kafka:1234', 'h2:1235']
 
   - job_name: 'kafka'
     scrape_interval: 5s

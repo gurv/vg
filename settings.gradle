@@ -1,6 +1,6 @@
 rootProject.name = 'vg'
 
-include 'database'
+include 'h2'
 include 'swagger'
 include 'discovery'
 include 'config'

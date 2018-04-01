@@ -173,7 +173,7 @@ docker-compose -f docker-compose.dev.stream.yml  up -d
 docker-compose -f docker-compose.dev.services.yml stop
 ----
 
-* Останов хранилища данных в Docker-е
+* Останов базы данных в Docker-е
 
 [source]
 ----
@@ -385,7 +385,7 @@ gradle :metadata:bootRun
 java -jar metadata/build/libs/vg-metadata-0.1.0.jar --eureka.client.enabled=false --spring.cloud.config.fail-fast=false
 ----
 
-* Web-console хранилища данных
+* Web-console базы данных
 
 http://localhost:8082/db-console
 
@@ -395,7 +395,7 @@ http://localhost:8082/db-console
 jdbc:h2:tcp://localhost:9093/metadata
 ----
 
-=== Хранилище данных (Database)
+=== База данных (Database)
 
 * Web-консоль
 http://localhost:8083
@@ -404,7 +404,7 @@ http://localhost:8083
 .Примеры значений JDBC URL:
 * jdbc:h2:metadata
 * jdbc:h2:tcp://localhost:9093/auth
-* jdbc:h2:tcp://database-server:9093/account
+* jdbc:h2:tcp://h2:9093/account
 ====
 
 === Потоки данных (Dataflow)

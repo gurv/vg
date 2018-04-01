@@ -66,7 +66,7 @@ configure(rootProject) {
 
         // готовые загружаемые (например, из Docker Hub) docker-образы, в обертке этого проекта (напримеп, wurstmeister/kafka -> gurv/vg-kafka)
         dockerProjects = [
-                project(':database'),
+                project(':h2'),
                 project(':kafka'),
                 project(':zookeeper'),
                 project(':prometheus'),
@@ -167,6 +167,7 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
     }
 
     build.doLast {
+        // Dockerfile
         copy {
             from 'src/main/docker'
             filter {it

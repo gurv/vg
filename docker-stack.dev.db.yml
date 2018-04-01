@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  database:
-    image: gurv/vg-database:latest
+  h2:
+    image: gurv/vg-h2:latest
     ports:
       - 8083:8083 # web
       - 9093:9093 # tcp
