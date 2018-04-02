@@ -9,6 +9,9 @@ spring:
       kafka:
         binder:
           brokers: kafka:9092
+    consul:
+      host: consul
+      port: 8500
   datasource:
     url: jdbc:h2:mem:operation
     userName: sa

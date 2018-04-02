@@ -1,0 +1,3 @@
+= Consul
+
+Сборка https://hub.docker.com/_/consul/[docker-образа] Consul

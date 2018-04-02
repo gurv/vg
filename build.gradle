@@ -69,6 +69,7 @@ configure(rootProject) {
                 project(':h2'),
                 project(':kafka'),
                 project(':zookeeper'),
+                project(':consul'),
                 project(':prometheus'),
                 project(':grafana'),
                 project(':docker-registry'),
@@ -233,6 +234,7 @@ configure(project.bootProjects) {
 
     bootRun {
         systemProperty 'spring.cloud.stream.kafka.binder.brokers', 'localhost:9092'
+        systemProperty 'spring.cloud.consul.enabled', 'false'
     }
 }
 

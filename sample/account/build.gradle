@@ -1,7 +1,7 @@
 dependencies {
+    compile 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-stream'
     compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
     compile 'com.h2database:h2'
@@ -9,17 +9,6 @@ dependencies {
     testCompile 'org.springframework.cloud:spring-cloud-stream-test-support'
 }
 
-ext {
-    dockerPort = 8102
-}
-
-task dockerRun(type: Exec, overwrite: true) {
-    description = "Run docker-container project '$project.path'."
-    group = rootProject.dockerTaskGroup
-
-    commandLine "docker", "run",
-            "-d",
-            "-p", "127.0.0.1:$project.ext.dockerPort:8082",
-            "--name", project.dockerContainerName,
-            project.dockerImageName
+dockerRun {
+    ports '8102'
 }

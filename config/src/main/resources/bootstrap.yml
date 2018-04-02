@@ -5,6 +5,8 @@ spring:
   application:
     name: config
   cloud:
+    consul:
+      host: consul
     config:
       server:
         native:

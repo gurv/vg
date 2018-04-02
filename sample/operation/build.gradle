@@ -2,11 +2,11 @@ springBoot {
     mainClassName = 'ru.gurv.vg.sample.operation.OperationSampleApplication'
 }
 dependencies {
+    compile 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.data:spring-data-rest-hal-browser' //TODO временно
-    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-stream'
     compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
     compile 'io.springfox:springfox-swagger2'
@@ -14,17 +14,6 @@ dependencies {
     testCompile 'org.springframework.cloud:spring-cloud-stream-test-support'
 }
 
-ext {
-    dockerPort = 8101
-}
-
-task dockerRun(type: Exec, overwrite: true) {
-    description = "Run docker-container project '$project.path'."
-    group = rootProject.dockerTaskGroup
-
-    commandLine "docker", "run",
-            "-d",
-            "-p", "127.0.0.1:$project.ext.dockerPort:8101",
-            "--name", project.dockerContainerName,
-            project.dockerImageName
+dockerRun {
+    ports '8101'
 }

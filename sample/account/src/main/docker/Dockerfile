@@ -6,7 +6,7 @@ ENV JAVA_OPTS ""
 
 VOLUME /tmp
 
-ADD app.jar app.jar
-RUN sh -c 'touch /app.jar'
+COPY vg-account-0.1.0.jar ./
+RUN sh -c 'touch /vg-account-0.1.0.jar'
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /vg-account-0.1.0.jar" ]
