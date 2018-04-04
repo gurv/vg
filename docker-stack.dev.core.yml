@@ -1,19 +1,6 @@
 version: '3.4'
 
 services:
-  consul:
-    image: gurv/vg-consul:latest
-    ports:
-      - "8500:8500"
-      - "8301:8301"
-      - "8300:8300"
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
-
   config:
     image: gurv/vg-config:latest
     ports:

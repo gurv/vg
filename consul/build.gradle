@@ -1,3 +1,0 @@
-dockerRun {
-    ports '8500'
-}
