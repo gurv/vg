@@ -2,196 +2,48 @@
 :images: ./images
 :icons: font
 
-= VG.Техническая документация
+== Сервисы
 
-== Обзор
-
-* Технологии
-
-image::gradle.png[]
-image::nodejs.png[]
-image::spring.png[]
-image::angular.jpg[]
-image::docker.png[]
-
-* Компоненты
-
-[plantuml, services, png]
-....
-left header
-Диаграмма компонент
-endheader
-
-[Web]
-note right of [Web]
-  Angular
-end note
-[Gateway]
-note right of [Gateway]
-  Zuul
-end note
-[Config]
-[Auth]
-note right of [Auth]
-  OAuth2
-end note
-[Account]
-[Metadata]
-[DbServer]
-[DbData]
-note left of [DbServer]
-  H2
-end note
-[Web] --> [Gateway]
-[Gateway] --> [Config]
-[Gateway] --> [Auth]
-[Gateway] --> [Account]
-[Gateway] --> [Metadata]
-[Account] --> [Config]
-[Account] --> [DbServer] : TCP
-[Auth] --> [Config]
-[Auth] --> [DbServer] : TCP
-[Metadata] --> [Config]
-[Metadata] --> [DbServer] : TCP
-[DbServer] --> [Config]
-[DbServer] -- [DbData] : Docker Storage Volume
-....
-
-=== Порты
+* Порты
 
 [cols="2*", options="header"]
 |===
 |Сервис
 |Порт
 
-|Config
+|config
 |8888
 
-|Gateway
+|gateway
 |10000; 8000 (Sidecar)
 
-|Auth
+|auth
 |5000
 
-|Account
+|account
 |8081
 
-|Metadata
+|metadata
 |8082
 
-|Хранилище данных
+|h2
 |8083, 9093 (TCP)
 
-|Потоки данных
+|dataflow
 |9393
 
-|API
-|8084 (Swagger)
+|swagger
+|8084
 
-|Monitoring
+|monitoring
 |9090 (Prometheus), 9091 (PushGateway), 9182 (WMI Exporter), 9100 (Node Exporter), 3000 (Grafana)
 
-|Примеры
+|samples
 |8101 (SampleOperation), 8102 (SampleAccount)
 
-|Разное
+|...
 |5000 (Docker Registry)
 |===
-
-== Разработчику
-
-* Инструменты
-
-[plantuml, dev-env, png]
-....
-[Docker]
-[Gradle] ..> [Java]
-[Asciidoc] ..> [Java]
-[Asciidoc] ..> [GraphViz]
-[Webpack] ..> [NodeJS]
-[Angular] ..> [NodeJS]
-[Angular] ..> [Webpack]
-....
-
-* Сборка
-
-[source]
-----
-gradle build
-----
-[TIP]
-====
-Тайминг 20170303: 2 mins 3.568 secs
-====
-
-* Сборка Docker-образов
-
-[source]
-----
-gradle dockerImage
-----
-[TIP]
-====
-* Тайминг 20170303: 4 mins 6.054 secs
-* На этапе сборки подпроекта web может быть сообщение "FAILURE: Build failed with an exception." - игнорировать
-====
-
-* Запуск в Docker-е с локальными файлами данных DB-хранилища
-
-[source]
-----
-docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml up -d
-----
-[TIP]
-====
-По состоянию на 20170303: требуется 2 шт. таких запуска, т.к. при первом пуске сервис Gateway так и не соединился с сервисом Config
-====
-
-* Запуск в Docker-е Stream-инфраструктуры (Kafka/...)
-
-[source]
-----
-docker-compose -f docker-compose.dev.stream.yml  up -d
-----
-
-* Останов сервисов в Docker-е
-
-[source]
-----
-docker-compose -f docker-compose.dev.services.yml stop
-----
-
-* Останов базы данных в Docker-е
-
-[source]
-----
-docker-compose -f docker-compose.dev.db.yml stop
-----
-
-
-* Создание ключей
-
-[source]
-----
-C:\app\java\jre1.8.0_92\bin\keytool.exe -genkeypair -alias vg -keyalg RSA -dname "CN=vg" -keystore vg.jks -keypass 1q2w3e4r -storepass 1q2w3e4r
-C:\app\java\jre1.8.0_92\bin\keytool.exe -export -keystore vg.jks -alias vg -rfc -storepass 1q2w3e4r -file vg.cer
-C:\app\openSSL\bin\openssl.exe x509 -inform pem -pubkey -in vg.cer
-----
-
-* Удаление контейнеров остановленных сервисов в Docker-е
-
-[source]
-----
-docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml rm
-----
-
-* Удаление всех сборок
-[source]
-----
-gradle clean
-----
-
-== Сервисы
 
 === consul
 
@@ -199,157 +51,39 @@ gradle clean
 
 * http://localhost:8500/ui[UI]
 
-=== Конфигуратор (Config)
+=== config
+
+Конфигурация сервисов
+
 * Проверка доступности (на примере получения значения настроек по умолчанию сервиса Account)
 
 http://localhost:8888/account/default
 
 * http://localhost:8888/actuator/info[actuator]
 
-* Запуск (в примере - версия 0.1.0)
-[source]
-----
-java -jar config/build/libs/vg-config-0.1.0.jar
-----
-* Запуск без сборки (используется spring-boot-devtools)
-[source]
-----
-gradle :config:bootRun
-----
-* Сборка
-[source]
-----
-gradle :config:build
-----
-* Сборка Docker-образа
-[source]
-----
-gradle :config:dockerImage
-----
-* Удаление всей сборки
-[source]
-----
-gradle :config:clean
-----
+=== auth
 
-=== Авторизация (Auth)
+Авторизация
+
 * Endpoint сервиса http://localhost:5000/uaa
-* Запуск (в примере - версия 0.1.0)
-[source]
-----
-java -jar auth/build/libs/vg-auth-0.1.0.jar
-----
-* Запуск без сборки (используется spring-boot-devtools)
-[source]
-----
-gradle :auth:bootRun
-----
-* Сборка
-[source]
-----
-gradle :auth:dockerImage
-----
-* Сборка Docker-образа
-[source]
-----
-gradle :auth:build
-----
-* Удаление всей сборки
-[source]
-----
-gradle :auth:clean
-----
 
-=== Учетные записи (Account)
+=== account
 
-* Запуск (в примере - версия 0.1.0)
-[source]
-----
-java -jar account/build/libs/vg-account-0.1.0.jar
-----
+Учетные записи
 
-* Запуск без сборки (используется spring-boot-devtools)
-[source]
-----
-gradle :account:bootRun
-----
-[TIP]
-====
-.В этом режиме:
-* Отключены взаимодействия с сервисом Config
-* DB-сервер - это H2 (embedded mode; in-memory databases) с WEB-консолью http://localhost:8081/db-console и JDBC URL jdbc:h2:mem:account
+=== gateway
 
-====
-
-* Сборка
-[source]
-----
-gradle :account:build
-----
-
-* Сборка Docker-образа
-[source]
-----
-gradle :account:dockerImage
-----
-
-* Удаление всей сборки
-[source]
-----
-gradle :account:clean
-----
-
-=== Шлюз (Gateway)
+Шлюз
 
 * Web-консоль сервиса http://localhost:10000/
 
-* Запуск (в примере - версия 0.1.0)
-[source]
-----
-java -jar gateway/build/libs/vg-gateway-0.1.0.jar
-----
+=== metadata
 
-* Запуск без сборки (используется spring-boot-devtools)
-[source]
-----
-gradle :gateway:bootRun
-----
-
-* Сборка
-[source]
-----
-gradle :gateway:build
-----
-
-* Сборка Docker-образа
-[source]
-----
-gradle :gateway:dockerImage
-----
-
-* Удаление всей сборки
-[source]
-----
-gradle :gateway:clean
-----
-
-=== Модель данных (Metadata)
+Модель данных
 
 * Проверка доступности
 
 http://localhost:8082/test
-
-* Сборка (если требуется) и запуск сервиса
-[source]
-----
-gradle :metadata:bootRun
-----
-
-* Запуск (без Gradle) сервиса (в примере - версии 0.1.0)
-[source]
-----
-java -jar metadata/build/libs/vg-metadata-0.1.0.jar --eureka.client.enabled=false --spring.cloud.config.fail-fast=false
-----
 
 * Web-console базы данных
 
@@ -361,7 +95,9 @@ http://localhost:8082/db-console
 jdbc:h2:tcp://localhost:9093/metadata
 ----
 
-=== База данных (Database)
+=== h2
+
+База данных H2
 
 * Web-консоль
 http://localhost:8083
@@ -373,17 +109,23 @@ http://localhost:8083
 * jdbc:h2:tcp://h2:9093/account
 ====
 
-=== Потоки данных (Dataflow)
+=== dataflow
+
+Потоки данных (Kafka)
 
 * Web-консоль сервера
 http://localhost:9393/dashboard
 
-=== Управление приложениями (Skipper)
+=== skipper
+
+Управление приложениями
 
 * API
 http://localhost:7577/api
 
-=== Мониторинг
+=== monitoring
+
+Мониторинг
 
 * UI:
 http://localhost:3000[Grafana],
@@ -460,7 +202,9 @@ docker run -d -p 9090:9090 -v C:/prj/vg/prometheus/build/prometheus.yml:/etc/pro
 gradle prometheus:dockerRun
 ----
 
-=== API (Swagger)
+=== swagger
+
+API
 
 * Swagger
 http://localhost:8084/swagger-ui.html
@@ -480,6 +224,98 @@ npm run prod-build
 * Удаление сборки
 ----
 npm run dist-clean
+----
+
+== Разработчику
+
+* Инструменты
+
+[plantuml, dev-env, png]
+....
+[Docker]
+[Gradle] ..> [Java]
+[Asciidoc] ..> [Java]
+[Asciidoc] ..> [GraphViz]
+[Webpack] ..> [NodeJS]
+[Angular] ..> [NodeJS]
+[Angular] ..> [Webpack]
+....
+
+* Сборка
+
+[source]
+----
+gradle build
+----
+[TIP]
+====
+Тайминг 20170303: 2 mins 3.568 secs
+====
+
+* Сборка Docker-образов
+
+[source]
+----
+gradle dockerImage
+----
+[TIP]
+====
+* Тайминг 20170303: 4 mins 6.054 secs
+* На этапе сборки подпроекта web может быть сообщение "FAILURE: Build failed with an exception." - игнорировать
+====
+
+* Запуск в Docker-е с локальными файлами данных DB-хранилища
+
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml up -d
+----
+[TIP]
+====
+По состоянию на 20170303: требуется 2 шт. таких запуска, т.к. при первом пуске сервис Gateway так и не соединился с сервисом Config
+====
+
+* Запуск в Docker-е Stream-инфраструктуры (Kafka/...)
+
+[source]
+----
+docker-compose -f docker-compose.dev.stream.yml  up -d
+----
+
+* Останов сервисов в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.services.yml stop
+----
+
+* Останов базы данных в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml stop
+----
+
+* Создание ключей
+
+[source]
+----
+C:\app\java\jre1.8.0_92\bin\keytool.exe -genkeypair -alias vg -keyalg RSA -dname "CN=vg" -keystore vg.jks -keypass 1q2w3e4r -storepass 1q2w3e4r
+C:\app\java\jre1.8.0_92\bin\keytool.exe -export -keystore vg.jks -alias vg -rfc -storepass 1q2w3e4r -file vg.cer
+C:\app\openSSL\bin\openssl.exe x509 -inform pem -pubkey -in vg.cer
+----
+
+* Удаление контейнеров остановленных сервисов в Docker-е
+
+[source]
+----
+docker-compose -f docker-compose.dev.db.yml -f docker-compose.dev.services.yml rm
+----
+
+* Удаление всех сборок
+[source]
+----
+gradle clean
 ----
 
 == Документация
