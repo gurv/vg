@@ -31,10 +31,6 @@ note right of [Gateway]
   Zuul
 end note
 [Config]
-[Discovery]
-note right of [Discovery]
-  Eureka
-end note
 [Auth]
 note right of [Auth]
   OAuth2
@@ -47,20 +43,15 @@ note left of [DbServer]
   H2
 end note
 [Web] --> [Gateway]
-[Gateway] --> [Discovery]
 [Gateway] --> [Config]
 [Gateway] --> [Auth]
 [Gateway] --> [Account]
 [Gateway] --> [Metadata]
-[Account] --> [Discovery]
 [Account] --> [Config]
 [Account] --> [DbServer] : TCP
-[Auth] --> [Discovery]
 [Auth] --> [Config]
 [Auth] --> [DbServer] : TCP
-[Discovery] <--> [Config]
 [Metadata] --> [Config]
-[Metadata] --> [Discovery]
 [Metadata] --> [DbServer] : TCP
 [DbServer] --> [Config]
 [DbServer] -- [DbData] : Docker Storage Volume
@@ -73,14 +64,8 @@ end note
 |Сервис
 |Порт
 
-|Consul
-|8500
-
 |Config
 |8888
-
-|Discovery
-|8761
 
 |Gateway
 |10000; 8000 (Sidecar)
@@ -215,9 +200,9 @@ gradle clean
 * http://localhost:8500/ui[UI]
 
 === Конфигуратор (Config)
-* Проверка доступности (на примере получения значения настроек по умолчанию сервиса Discovery)
+* Проверка доступности (на примере получения значения настроек по умолчанию сервиса Account)
 
-http://localhost:8888/discovery/default
+http://localhost:8888/account/default
 
 * http://localhost:8888/actuator/info[actuator]
 
@@ -245,34 +230,6 @@ gradle :config:dockerImage
 [source]
 ----
 gradle :config:clean
-----
-
-=== Обнаружитель (Discovery)
-* Web-консоль http://localhost:8761/
-* Запуск (в примере - версия 0.1.0)
-[source]
-----
-java -jar discovery/build/libs/vg-discovery-0.1.0.jar
-----
-* Запуск без сборки (используется spring-boot-devtools)
-[source]
-----
-gradle :discovery:bootRun
-----
-* Сборка
-[source]
-----
-gradle :discovery:dockerImage
-----
-* Сборка Docker-образа
-[source]
-----
-gradle :discovery:build
-----
-* Удаление всей сборки
-[source]
-----
-gradle :discovery:clean
 ----
 
 === Авторизация (Auth)
@@ -319,7 +276,7 @@ gradle :account:bootRun
 [TIP]
 ====
 .В этом режиме:
-* Отключены взаимодействия с сервисами Config и Discovery
+* Отключены взаимодействия с сервисом Config
 * DB-сервер - это H2 (embedded mode; in-memory databases) с WEB-консолью http://localhost:8081/db-console и JDBC URL jdbc:h2:mem:account
 
 ====
@@ -488,7 +445,6 @@ http://localhost:1234/metrics[Kafka],
 http://localhost:9393/management/prometheus[Dataflow],
 http://localhost:8084/actuator/prometheus[Swagger],
 http://localhost:8888/actuator/prometheus[Config],
-http://localhost:8761/actuator/prometheus[Discovery],
 http://localhost:10000/actuator/prometheus[Gateway],
 http://localhost:8081/actuator/prometheus[Account],
 http://localhost:8082/actuator/prometheus[Metadata]

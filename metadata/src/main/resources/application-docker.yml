@@ -2,9 +2,3 @@ spring:
   cloud:
     config:
       uri: http://config:8888
-
-eureka:
-  client:
-    enabled: true
-    serviceUrl:
-      defaultZone: http://discovery:8761/eureka/

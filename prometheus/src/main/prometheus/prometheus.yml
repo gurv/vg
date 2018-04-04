@@ -40,12 +40,6 @@ scrape_configs:
     static_configs:
       - targets: ['config:8888']
 
-  - job_name: 'discovery'
-    metrics_path: '/actuator/prometheus'
-    scrape_interval: 5s
-    static_configs:
-      - targets: ['discovery:8761']
-
   - job_name: 'auth'
     metrics_path: '/actuator/prometheus'
     scrape_interval: 5s

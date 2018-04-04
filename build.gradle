@@ -40,7 +40,6 @@ configure(rootProject) {
         // проекты нв Spring Boot
         bootProjects = [
                 project(':swagger'),
-                project(':discovery'),
                 project(':config'),
                 project(':gateway'),
                 project(':auth'),
@@ -83,8 +82,6 @@ configure(rootProject) {
         documentationProjects = [
                 project(':documentation'),
         ]
-
-        discoveryProject = project(':discovery')
 
         applicationTaskGroup = 'application'
         dockerTaskGroup = 'docker'
@@ -226,9 +223,6 @@ configure(project.bootProjects) {
     }
 
     tasks.withType(Test) {
-        if (project != discoveryProject) {
-            systemProperty 'eureka.client.enabled', 'false'
-        }
     }
 
     bootRun {

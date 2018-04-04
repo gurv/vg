@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 */
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,7 +19,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 
 @SpringBootApplication
 @EnableResourceServer
-@EnableDiscoveryClient
 /*
 @EnableOAuth2Client
 */
