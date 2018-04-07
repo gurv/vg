@@ -2,3 +2,19 @@ dockerRun {
     ports '8083', '9093'
     env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false'
 }
+
+task dockerBackup(type: Exec) {
+    commandLine "docker", "run",
+            "--rm",
+            "-v", "vg_h2:/opt/h2-data",
+            "-v", "${rootProject.projectDir.path.replace('\\', '/')}/.backups:/backup",
+            "alpine", "tar", "-cvzf", "backup/h2.tar.gz", "opt/h2-data"
+}
+
+task dockerRestore(type: Exec) {
+    commandLine "docker", "run",
+            "--rm",
+            "-v", "vg_h2:/opt/h2-data",
+            "-v", "${rootProject.projectDir.path.replace('\\', '/')}/.backups:/backup",
+            "alpine", "tar", "-xvf", "backup/h2.tar.gz"
+}
