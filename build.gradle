@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.RELEASE'
+        springBootVersion = '2.0.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -20,20 +20,19 @@ configure(rootProject) {
     ext {
         maintainer = 'Vladimir Gurinovich <vladimir.gurinovich@gmail.com>'
 
-        springCloudVersion = 'Finchley.M8'
-        springSecurityVersion = '5.0.3.RELEASE'
-        springSecurityOAuthVersion = '2.2.1.RELEASE'
+        springCloudVersion = 'Finchley.M9'
+        springSecurityVersion = '5.0.4.RELEASE'
+        springSecurityOAuthVersion = '2.3.0.RELEASE'
         springSecurityJwtVersion = '1.0.9.RELEASE'
-        springCloudDataflowVersion = '1.4.0.RC1'
-        springCloudSkipperVersion = '1.0.1.RELEASE'
+        springCloudDataflowVersion = '1.4.0.RELEASE'
+        springCloudSkipperVersion = '1.0.2.RELEASE'
         springfoxVersion = '2.8.0'
-        micrometerPometheusVersion = '1.0.2'
+        micrometerVersion = '1.0.3'
         prometheusVersion = 'v2.2.1'
         prometheusWmiExporterVersion = '0.2.10'
         grafanaVersion = '5.0.3'
         h2Version = '2014-04-05'
         groovyVersion = '2.4.7'
-        micrometerSpringLegacyVersion = '1.0.2'
 
         prometheusWmiExporter = findProperty('prometheusWmiExporter') ?: "C:/app/wmi_exporter-$prometheusWmiExporterVersion/wmi_exporter.exe"
 
@@ -129,7 +128,7 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
             dependency "org.springframework.security:spring-security-jwt:$rootProject.springSecurityJwtVersion"
             dependency "io.springfox:springfox-swagger-ui:$rootProject.springfoxVersion"
             dependency "io.springfox:springfox-swagger2:$rootProject.springfoxVersion"
-            dependency "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerPometheusVersion"
+            dependency "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerVersion"
         }
     }
 
@@ -259,8 +258,8 @@ configure(project.monitoringOldBootProjects) {
     }
 
     dependencies {
-        monitoringOldBoot "io.micrometer:micrometer-spring-legacy:$rootProject.micrometerSpringLegacyVersion"
-        monitoringOldBoot "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerSpringLegacyVersion"
+        monitoringOldBoot "io.micrometer:micrometer-spring-legacy:$rootProject.micrometerVersion"
+        monitoringOldBoot "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerVersion"
     }
 
     build.doLast {
