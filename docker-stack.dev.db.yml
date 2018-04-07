@@ -12,6 +12,3 @@ services:
       - 8083:8083 # web
       - 9093:9093 # tcp
       - 1235:1235 # JMX Exporter
-    environment:
-      JVM_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=9999 -javaagent:/usr/app/jmx_prometheus_javaagent.jar=1235:/usr/app/prometheus.yml
-      JMXPORT: 9999
