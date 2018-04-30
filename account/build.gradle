@@ -1,24 +1,27 @@
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.cloud:spring-cloud-starter-config'
-    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    compile 'org.springframework.cloud:spring-cloud-starter-oauth2'
-    compile 'org.springframework.security.oauth:spring-security-oauth2'
+    compile 'org.springframework.cloud:spring-cloud-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'io.springfox:springfox-swagger2'
     compile 'com.h2database:h2'
 }
 
 bootRun {
     systemProperties = [
             'spring.cloud.config.enabled': false,
-            'eureka.client.enabled'      : false,
-            'spring.datasource.url'      : 'jdbc:h2:mem:account',
             'spring.h2.console.enabled'  : true
     ]
 }
 
+docker {
+    buildArgs([VG_VERSION: version])
+}
+
 dockerRun {
     ports '8081'
-    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false -Dspring.datasource.url=jdbc:h2:mem:account'
+    command 'account',
+            '-Dspring.cloud.config.enabled=false',
+            '-Dspring.h2.console.enabled=true',
+            '-Dspring.h2.console.settings.web-allow-others=true'
 }

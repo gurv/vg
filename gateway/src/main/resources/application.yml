@@ -3,7 +3,3 @@ management:
     web:
       exposure:
         include: health,info,prometheus
-
-eureka:
-  client:
-    enabled: true

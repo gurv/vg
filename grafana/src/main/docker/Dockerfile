@@ -1,6 +1,5 @@
-FROM grafana/grafana:$$grafanaVersion$$
-
-MAINTAINER $$maintainer$$
+ARG GRAFANA_VERSION=5.0.3
+FROM grafana/grafana:$GRAFANA_VERSION
 
 COPY grafana/datasources /etc/grafana/provisioning/datasources/
 COPY grafana/dashboards.yml /etc/grafana/provisioning/dashboards/

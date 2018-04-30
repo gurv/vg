@@ -45,62 +45,46 @@
 |5000 (Docker Registry)
 |===
 
-=== consul
-
-Обнаружение / конфигурация сервисов
-
-* http://localhost:8500/ui[UI]
-
 === config
 
-Конфигурация сервисов
+Конфигурация сервисов (
 
-* Проверка доступности (на примере получения значения настроек по умолчанию сервиса Account)
+http://localhost:8888/account/default[проверка доступности]
 
-http://localhost:8888/account/default
-
-* http://localhost:8888/actuator/info[actuator]
+http://localhost:8888/actuator/info[actuator]
 
 === auth
 
 Авторизация
 
-* Endpoint сервиса http://localhost:5000/uaa
+http://localhost:5000/uaa[endpoint]
 
 === account
 
 Учетные записи
 
+http://localhost:8081/db-console[db-console]
+
 === gateway
 
 Шлюз
 
-* Web-консоль сервиса http://localhost:10000/
+http://localhost:10000/[web-console]
 
 === metadata
 
 Модель данных
 
-* Проверка доступности
+http://localhost:8082/db-console[db-console]
 
-http://localhost:8082/test
-
-* Web-console базы данных
-
-http://localhost:8082/db-console
-
-в поле JDBC URL указать
-[source]
-----
-jdbc:h2:tcp://localhost:9093/metadata
-----
+http://localhost:8082/test[проверка доступности]
 
 === h2
 
 База данных H2
 
-* Web-консоль
-http://localhost:8083
+http://localhost:8083[web-console]
+
 [TIP]
 ====
 .Примеры значений JDBC URL:
@@ -111,17 +95,15 @@ http://localhost:8083
 
 === dataflow
 
-Потоки данных (Kafka)
+Потоки данных (Kafka/Zookeeper)
 
-* Web-консоль сервера
-http://localhost:9393/dashboard
+http://localhost:9393/dashboard[web-console]
 
 === skipper
 
 Управление приложениями
 
-* API
-http://localhost:7577/api
+http://localhost:7577/api[API]
 
 === monitoring
 
@@ -189,7 +171,8 @@ http://localhost:8084/actuator/prometheus[Swagger],
 http://localhost:8888/actuator/prometheus[Config],
 http://localhost:10000/actuator/prometheus[Gateway],
 http://localhost:8081/actuator/prometheus[Account],
-http://localhost:8082/actuator/prometheus[Metadata]
+http://localhost:8082/actuator/prometheus[Metadata],
+http://localhost:7577/actuator/prometheus[Skipper]
 
 Запуск Prometheus в Docker-е:
 [source]
@@ -339,9 +322,8 @@ documentation/build/asciidoc/html5/notes.html
 ----
 docker stack deploy -c docker-stack.dev.db.yml vg
 docker stack deploy -c docker-stack.dev.stream.yml vg
-docker stack deploy -c docker-stack.dev.dataflow.yml vg
+docker stack deploy -c docker-stack.dev.core.yml vg
 docker stack deploy -c docker-stack.dev.monitoring.yml vg
-docker stack deploy -c docker-stack.dev.api.yml vg
 docker stack rm vg
 docker volume prune --force
 ----

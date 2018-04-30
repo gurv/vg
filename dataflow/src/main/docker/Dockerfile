@@ -1,16 +1,16 @@
 FROM openjdk:jre-alpine
 
-MAINTAINER $$maintainer$$
+ARG VG_VERSION=0.0.1
 
-ARG jar=spring-cloud-dataflow-server-local-1.4.0.RC1.jar
+RUN mkdir /opt
+COPY *.jar /opt/vg-dataflow-$VG_VERSION/app.jar
+COPY *.yml /opt/vg-dataflow-$VG_VERSION
+COPY monitoring /opt/vg-dataflow-$VG_VERSION/monitoring
+RUN touch /opt/vg-dataflow-$VG_VERSION/app.jar && \
+    ln -s /opt/vg-dataflow-$VG_VERSION /opt/vg-dataflow
 
-ENV java_opts=""
-
-COPY ./ ./
-RUN ["sh", "-c", \
-    "touch /spring-cloud-dataflow-server-local-1.4.0.RC1.jar"]
-
-#CMD ["sh", "-c", "java -cp ./spring-cloud-dataflow-server-local-1.4.0.RC1.jar -Dloader.path=libs -Dmanagement.security.enabled=false -Dmanagement.endpoints.web.exposure.include=health,info,prometheus $JAVA_OPTS org.springframework.boot.loader.PropertiesLauncher"]
-ENTRYPOINT [ "sh", "-c", "java -cp ./spring-cloud-dataflow-server-local-1.4.0.RC1.jar -Dloader.path=monitoring -Dloader.config.location=application.yml $java_opts org.springframework.boot.loader.PropertiesLauncher" ]
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 9393
+CMD ["dataflow"]

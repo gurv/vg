@@ -4,19 +4,17 @@ dependencies {
     }
 }
 
-ext {
-    jarName = "spring-cloud-dataflow-shell-${rootProject.springCloudDataflowVersion}.jar"
-}
-
 run {
     standardInput = System.in
-    jvmArgs "-jar",  "$buildDir/libs/$jarName"
+    jvmArgs "-jar",  "$buildDir/libs/spring-cloud-dataflow-shell-${rootProject.springCloudDataflowVersion}.jar"
 }
 run.dependsOn build
 
-// dockerRun - невозможен запуск этого образа из gradle, т.к. используются опции -i -t
-// Можно выполнить из cmd следующее:
-// docker run -i -t --name vg-dataflow-shell --link vg-dataflow:server gurv/vg-dataflow-shell:latest
-// И затем выполнить из shell следующее:
-// dataflow config server http://server:9393
-//FIXME но после выполнения, например, "dataflow config info" возникает ошибка "New state of 'nil' is invalid."
+docker {
+    buildArgs([VG_VERSION: version])
+}
+
+// Если на Windows 10 выполняется docker run -it , то ошибка: the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+// Workaround: из cmd или терминала IDEA выполнить:
+// docker run -it -e --rm gurv/vg-dataflow-shell:latest dataflow-shell
+tasks['dockerRun'].enabled = false

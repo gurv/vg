@@ -5,3 +5,6 @@
         web:
             exposure:
                 include: health,info,prometheus
+spring:
+  application:
+    name: skipper

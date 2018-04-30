@@ -15,14 +15,22 @@ task run(type: JavaExec, overwrite: true) {
     classpath files("$buildDir/libs/$jarName")
     jvmArgs "-Dloader.path=monitoring"
     jvmArgs "-Dloader.config.location=application.yml"
+    jvmArgs "-Dspring.cloud.config.enabled=false"
     main = 'org.springframework.boot.loader.PropertiesLauncher'
 }
 run.dependsOn build
 
 docker {
-    buildArgs([jar: jarName])
+    buildArgs([VG_VERSION: rootProject.h2Version])
 }
 
 dockerRun {
     ports '9393'
+    command 'dataflow',
+            '-Dspring.cloud.config.enabled=false'
 }
+
+/*
+TODO не удается сделать такую gradle-команду для в shell контейнера. Ругается на -t в параметрах
+    docker run -it -e "JAVA_OPTS=-Dspring.cloud.config.enabled=false" -p=9393:9393 --rm gurv/vg-dataflow:latest /bin/ash
+*/

@@ -1,7 +1,13 @@
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-config-server'
+    compile 'io.springfox:springfox-swagger2'
 }
 
 dockerRun {
     ports '8888'
+    command '-Djava.security.egd=file:/dev/./urandom',
+            '-Dspring.cloud.config.enabled=false',
+            '-Dspring.h2.console.enabled=true',
+            '-Dspring.h2.console.settings.web-allow-others=true',
+            '-jar', '/app.jar'
 }

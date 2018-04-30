@@ -4,19 +4,17 @@ dependencies {
     }
 }
 
-ext {
-    jarName = "spring-cloud-skipper-shell-${rootProject.springCloudSkipperVersion}.jar"
-}
-
 run {
     standardInput = System.in
     jvmArgs "-jar",  "$buildDir/libs/spring-cloud-skipper-shell-${rootProject.springCloudSkipperVersion}.jar"
 }
 run.dependsOn build
 
-// dockerRun - невозможен запуск этого образа из gradle, т.к. используются опции -i -t
-// Можно выполнить из cmd следующее:
-// docker run -i -t --name vg-skipper-shell --link vg-skipper-server:server gurv/vg-skipper-shell:latest
-// И затем выполнить из shell следующее:
-// skipper config uri http://server:7577/api
-//FIXME после этого возникает ошибка "Host name may not be null"
+docker {
+    buildArgs([VG_VERSION: version])
+}
+
+// Если на Windows 10 выполняется docker run -it , то ошибка: the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+// Workaround: из cmd или терминала IDEA выполнить:
+// docker run -it -e --rm gurv/vg-skipper-shell:latest skipper-shell
+tasks['dockerRun'].enabled = false

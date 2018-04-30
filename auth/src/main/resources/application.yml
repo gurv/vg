@@ -18,8 +18,7 @@ spring:
             user-info-uri: https://dev-957327.oktapreview.com/oauth2/default/v1/userinfo
             jwk-set-uri: https://dev-957327.oktapreview.com/oauth2/default/v1/keys
   datasource:
-#    url: jdbc:h2:tcp://localhost:9093/auth;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:h2:file:~/test
+    url: jdbc:h2:mem:auth
     userName: sa
     password:
     driver-class-name: org.h2.Driver

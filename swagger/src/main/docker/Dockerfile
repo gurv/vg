@@ -1,12 +1,15 @@
 FROM openjdk:jre-alpine
 
-MAINTAINER $$maintainer$$
+ARG VG_VERSION=0.0.1
+ARG HOME=/opt/vg-swagger-$VG_VERSION
 
-ENV JAVA_OPTS ""
+RUN mkdir /opt
+COPY *.jar $HOME/app.jar
+RUN touch $HOME/app.jar && \
+    ln -s $HOME /opt/vg-swagger
 
-VOLUME /tmp
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
-COPY vg-swagger-0.1.0.jar ./
-RUN sh -c 'touch /vg-swagger-0.1.0.jar'
-
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /vg-swagger-0.1.0.jar" ]
+EXPOSE 8084
+CMD ["swagger"]

@@ -8,9 +8,9 @@ spring:
           destination: operations
       kafka:
         binder:
-          brokers: kafka:9092
+          brokers: localhost:9092
   datasource:
-    url: jdbc:h2:mem:account
+    url: jdbc:h2:mem:sample-account
     userName: sa
     password:
     driver-class-name: org.h2.Driver
@@ -23,7 +23,7 @@ spring:
       ddl-auto: none
       hbm2ddl:
         auto: update
+    open-in-view: true
   h2:
     console:
-      enabled: false #true
       path: /db-console

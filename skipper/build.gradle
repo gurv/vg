@@ -4,15 +4,11 @@ dependencies {
     }
 }
 
-ext {
-    jarName = "spring-cloud-skipper-server-${rootProject.springCloudSkipperVersion}.jar"
-}
-
 mainClassName = "org.springframework.cloud.skipper.server.app.SkipperServerApplication"
 
 task run(type: JavaExec, overwrite: true) {
     workingDir "$buildDir/libs"
-    classpath files("$buildDir/libs/$jarName")
+    classpath files("$buildDir/libs/spring-cloud-skipper-server-${rootProject.springCloudSkipperVersion}.jar")
     jvmArgs "-Dloader.path=monitoring"
     jvmArgs "-Dloader.config.location=application.yml"
     main = 'org.springframework.boot.loader.PropertiesLauncher'
@@ -20,9 +16,11 @@ task run(type: JavaExec, overwrite: true) {
 run.dependsOn build
 
 docker {
-    buildArgs([jar: jarName])
+    buildArgs([VG_VERSION: version])
 }
 
 dockerRun {
     ports '7577'
+    command 'skipper',
+            '-Dspring.cloud.config.enabled=false'
 }

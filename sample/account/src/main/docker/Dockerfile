@@ -1,12 +1,15 @@
 FROM openjdk:jre-alpine
 
-MAINTAINER $$maintainer$$
+ARG VG_VERSION=0.0.1
+ARG HOME=/opt/vg-account-$VG_VERSION
 
-ENV JAVA_OPTS ""
+RUN mkdir /opt
+COPY *.jar $HOME/app.jar
+RUN touch $HOME/app.jar && \
+    ln -s $HOME /opt/vg-account
 
-VOLUME /tmp
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
-COPY vg-account-0.1.0.jar ./
-RUN sh -c 'touch /vg-account-0.1.0.jar'
-
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /vg-account-0.1.0.jar" ]
+EXPOSE 8102
+CMD ["account"]

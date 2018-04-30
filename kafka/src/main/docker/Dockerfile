@@ -5,8 +5,6 @@
 #   Tutorial: http://wurstmeister.github.io/kafka-docker/
 FROM wurstmeister/kafka
 
-MAINTAINER $$maintainer$$
-
 # prometheus
 COPY prometheus.yml /usr/app/prometheus.yml
 ADD http://central.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.10/jmx_prometheus_javaagent-0.10.jar /usr/app/jmx_prometheus_javaagent.jar

@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: kafka:9092
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://h2:9093/sample-account;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

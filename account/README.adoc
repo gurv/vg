@@ -1,0 +1,18 @@
+= Учетные записи
+
+* FIXME: не инициализируется БД по schema.sql.
+Если включить настройки
+[source]
+----
+logging:
+  level:
+    org.springframework: TRACE
+    org.hibernate.SQL: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+----
+, то в логах есть вот это
+[source]
+----
+org.springframework.beans.factory.BeanCurrentlyInCreationException: Error creating bean with name 'scopedTarget.dataSource': Requested bean is currently in creation: Is there an unresolvable circular reference?
+----
+Сравнивал с другими проектами, искал в инете, решения пока не нашел

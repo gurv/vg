@@ -1,10 +1,14 @@
 FROM openjdk:jre-alpine
 
-MAINTAINER $$maintainer$$
+ARG VG_VERSION=0.0.1
+ARG HOME=/opt/vg-dataflow-shell-$VG_VERSION
 
-ENV JAVA_OPTS ""
+RUN mkdir /opt
+COPY *.jar $HOME/app.jar
+RUN touch $HOME/app.jar && \
+    ln -s $HOME /opt/vg-dataflow-shell
 
-ADD app.jar app.jar
-RUN sh -c 'touch /app.jar'
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar" ]
+CMD ["dataflow-shell"]

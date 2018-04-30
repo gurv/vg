@@ -1,0 +1,15 @@
+= CLI потоков данных
+
+* FIXME:
+dockerRun - невозможен запуск этого образа из gradle, т.к. используются опции -i -t .
+Можно выполнить из cmd следующее:
+[source]
+----
+docker run -i -t --name vg-dataflow-shell --link vg-dataflow:server gurv/vg-dataflow-shell:latest
+----
+И затем выполнить из shell следующее:
+[source]
+----
+dataflow config server http://server:9393
+----
+но после выполнения, например, "dataflow config info" возникает ошибка "New state of 'nil' is invalid."

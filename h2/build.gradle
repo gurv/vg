@@ -1,6 +1,9 @@
+docker {
+    buildArgs([H2_VERSION: h2Version])
+}
+
 dockerRun {
     ports '8083', '9093'
-    env 'JAVA_OPTS': '-Dspring.cloud.config.fail-fast=false -Deureka.client.enabled=false'
 }
 
 task dockerBackup(type: Exec) {

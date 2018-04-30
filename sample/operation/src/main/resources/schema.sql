@@ -1,4 +1,4 @@
-CREATE TABLE Operation
+CREATE TABLE OPERATION
   (
   id BIGINT NOT NULL AUTO_INCREMENT,
   ts TIMESTAMP NOT NULL, --TODO как сделать значение по умолчанию CURRENT_TIMESTAMP в timezone=UTC ?

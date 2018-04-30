@@ -31,7 +31,7 @@ configure(rootProject) {
         prometheusVersion = 'v2.2.1'
         prometheusWmiExporterVersion = '0.2.10'
         grafanaVersion = '5.0.3'
-        h2Version = '2014-04-05'
+        h2Version = '2017-06-10' //2014-04-05'
         groovyVersion = '2.4.7'
 
         prometheusWmiExporter = findProperty('prometheusWmiExporter') ?: "C:/app/wmi_exporter-$prometheusWmiExporterVersion/wmi_exporter.exe"
@@ -143,6 +143,8 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
             from 'src/main/docker'
             filter {
                 it
+//                        .replace('$$version$$', project.version)
+                        .replace('$$version$$', 'xxx')
                         .replace('$$maintainer$$', rootProject.maintainer)
                         .replace('$$h2Version$$', rootProject.h2Version)
                         .replace('$$springCloudSkipperVersion$$', rootProject.springCloudSkipperVersion)
@@ -159,22 +161,14 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
 
     docker {
         name project.dockerImageName
-        files "$project.buildDir/dockerfile", "$project.buildDir/libs"
+        files "src/main/docker",
+                "$project.buildDir/libs"
     }
 
     build.doLast {
-        // Dockerfile
         copy {
             from 'src/main/docker'
-            filter {it
-                    .replace('$$maintainer$$', rootProject.maintainer)
-                    .replace('$$h2Version$$', rootProject.h2Version)
-                    .replace('$$springCloudSkipperVersion$$', rootProject.springCloudSkipperVersion)
-                    .replace('$$springCloudDataflowVersion$$', rootProject.springCloudDataflowVersion)
-                    .replace('$$grafanaVersion$$', rootProject.grafanaVersion)
-                    .replace('$$prometheusVersion$$', rootProject.prometheusVersion)
-            }
-            into "$project.buildDir/dockerfile"
+            into "$project.buildDir/docker"
         }
     }
 
@@ -222,6 +216,9 @@ configure(project.bootProjects) {
     }
 
     tasks.withType(Test) {
+        systemProperties = [
+                'spring.cloud.config.enabled': false,
+        ]
     }
 
     bootRun {

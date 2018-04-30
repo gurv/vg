@@ -5,6 +5,9 @@ management:
     web:
       exposure:
         include: health,info,prometheus
+
 spring:
+  application:
+    name: dataflow
   datasource:
-    url: jdbc:h2:file:~/test
+    url: jdbc:h2:mem:dataflow

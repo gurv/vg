@@ -1,14 +1,4 @@
-ext {
-    dockerPort = 5000
-}
-
-task dockerRun(type: Exec, overwrite: true) {
-    description = "Run docker-container project '$project.path'."
-    group = rootProject.dockerTaskGroup
-
-    commandLine "docker", "run",
-            "-d",
-            "-p", "127.0.0.1:$project.ext.dockerPort:$project.ext.dockerPort",
-            "--name", project.dockerContainerName,
-            project.dockerImageName
+dockerRun {
+    //FIXME порт 5000 уже используется контейнером проекта auth
+    ports '5000'
 }

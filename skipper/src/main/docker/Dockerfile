@@ -1,16 +1,17 @@
 FROM openjdk:jre-alpine
 
-MAINTAINER $$maintainer$$
+ARG VG_VERSION=0.0.1
+ARG HOME=/opt/vg-skipper-$VG_VERSION
 
-ARG jar=app.jar
+RUN mkdir /opt
+COPY *.jar $HOME/app.jar
+COPY *.yml /opt/vg-skipper-$VG_VERSION
+COPY monitoring /opt/vg-skipper-$VG_VERSION/monitoring
+RUN touch $HOME/app.jar && \
+    ln -s $HOME /opt/vg-skipper
 
-ENV java_opts=""
-
-COPY ./ ./
-RUN ["sh", "-c", \
-    "touch /$jar"]
-
-#ENTRYPOINT [ "sh", "-c", "java -cp ./$jar -Dloader.path=monitoring -Dloader.config.location=application.yml $java_opts org.springframework.boot.loader.PropertiesLauncher" ]
-ENTRYPOINT [ "sh", "-c", "java -cp ./spring-cloud-skipper-server-1.0.1.RELEASE.jar -Dloader.path=monitoring -Dloader.config.location=application.yml $java_opts org.springframework.boot.loader.PropertiesLauncher" ]
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 7577
+CMD ["skipper"]
