@@ -12,14 +12,12 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21")
-        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2")
+        classpath("com.bmuschko:gradle-docker-plugin:3.2.4")
     }
 }
 
 configure(rootProject) {
     ext {
-        maintainer = 'Vladimir Gurinovich <vladimir.gurinovich@gmail.com>'
-
         springCloudVersion = 'Finchley.M9'
         springSecurityVersion = '5.0.4.RELEASE'
         springSecurityOAuthVersion = '2.3.0.RELEASE'
@@ -31,8 +29,13 @@ configure(rootProject) {
         prometheusVersion = 'v2.2.1'
         prometheusWmiExporterVersion = '0.2.10'
         grafanaVersion = '5.0.3'
-        h2Version = '2017-06-10' //2014-04-05'
+        h2Version = '2017-06-10'
         groovyVersion = '2.4.7'
+        portainerVersion = '1.16.5'
+        alpineVersion = '3.7'
+        dockerVersion = '18.03.1-ce'
+        zookeeperVersion = '3.4.11'
+        kafkaVersion = '1.1.0'
 
         prometheusWmiExporter = findProperty('prometheusWmiExporter') ?: "C:/app/wmi_exporter-$prometheusWmiExporterVersion/wmi_exporter.exe"
 
@@ -69,7 +72,9 @@ configure(rootProject) {
                 project(':zookeeper'),
                 project(':prometheus'),
                 project(':grafana'),
+                project(':docker-cli'),
                 project(':docker-registry'),
+                project(':portainer'),
                 project(':dataflow-shell'),
                 project(':skipper-shell'),
         ]
@@ -111,6 +116,7 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
     repositories {
         mavenCentral()
         maven { url "https://repo.spring.io/milestone" }
+        jcenter()
     }
 
     dependencyManagement {
@@ -138,45 +144,17 @@ configure(subprojects.findAll {it.subprojects.size() == 0 } - documentationProje
         dockerImageBuildArgs = []
     }
 
-    build.doLast {
-        copy {
-            from 'src/main/docker'
-            filter {
-                it
-//                        .replace('$$version$$', project.version)
-                        .replace('$$version$$', 'xxx')
-                        .replace('$$maintainer$$', rootProject.maintainer)
-                        .replace('$$h2Version$$', rootProject.h2Version)
-                        .replace('$$springCloudSkipperVersion$$', rootProject.springCloudSkipperVersion)
-                        .replace('$$springCloudDataflowVersion$$', rootProject.springCloudDataflowVersion)
-                        .replace('$$grafanaVersion$$', rootProject.grafanaVersion)
-                        .replace('$$prometheusVersion$$', rootProject.prometheusVersion)
-            }
-            into "$project.buildDir/docker"
-        }
-    }
+    apply plugin: 'com.bmuschko.docker-remote-api'
 
-    apply plugin: 'com.palantir.docker'
-    apply plugin: 'com.palantir.docker-run'
+    // https://github.com/bmuschko/gradle-docker-plugin/issues/467#issuecomment-353865846
+    dependencies {
+        dockerJava 'com.github.docker-java:docker-java:3.1.0-rc-2'
+        dockerJava 'org.slf4j:slf4j-simple:1.7.5'
+        dockerJava 'cglib:cglib:3.2.0'
+    }
 
     docker {
-        name project.dockerImageName
-        files "src/main/docker",
-                "$project.buildDir/libs"
-    }
-
-    build.doLast {
-        copy {
-            from 'src/main/docker'
-            into "$project.buildDir/docker"
-        }
-    }
-
-    dockerPrepare.dependsOn build
-
-    dockerRun {
-        name project.dockerContainerName
-        image project.dockerImageName
+        url = 'tcp://192.168.1.33:2375'
     }
 }
 

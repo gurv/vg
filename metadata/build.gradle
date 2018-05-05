@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -13,8 +15,19 @@ bootRun {
     ]
 }
 
-dockerRun {
-    ports '8082'
-    command 'metadata',
-            '-Dspring.cloud.config.enabled=false'
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/metadata:latest'
+    buildArgs = [
+            'VG_VERSION': version,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/docker'
+            from "$project.buildDir/libs"
+            into "$buildDir/docker"
+        }
+    }
 }

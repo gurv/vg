@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 dependencies {
     extJar module("org.springframework.cloud:spring-cloud-skipper-server") {
         transitive = false
@@ -7,20 +9,27 @@ dependencies {
 mainClassName = "org.springframework.cloud.skipper.server.app.SkipperServerApplication"
 
 task run(type: JavaExec, overwrite: true) {
+    dependsOn build
     workingDir "$buildDir/libs"
     classpath files("$buildDir/libs/spring-cloud-skipper-server-${rootProject.springCloudSkipperVersion}.jar")
     jvmArgs "-Dloader.path=monitoring"
     jvmArgs "-Dloader.config.location=application.yml"
     main = 'org.springframework.boot.loader.PropertiesLauncher'
 }
-run.dependsOn build
 
-docker {
-    buildArgs([VG_VERSION: version])
-}
-
-dockerRun {
-    ports '7577'
-    command 'skipper',
-            '-Dspring.cloud.config.enabled=false'
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/skipper:latest'
+    buildArgs = [
+            'VG_VERSION': version,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/docker'
+            from "$project.buildDir/libs"
+            into "$buildDir/docker"
+        }
+    }
 }

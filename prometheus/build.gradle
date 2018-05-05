@@ -1,10 +1,17 @@
-dockerRun {
-    ports '9090'
-}
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
-dockerPrepare.doLast {
-    copy {
-        from 'src/main/prometheus'
-        into "$project.buildDir/docker/prometheus"
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/prometheus:latest'
+    buildArgs = [
+            'PROMETHEUS_VERSION': rootProject.prometheusVersion,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/prometheus'
+            into "$project.buildDir/docker/prometheus"
+        }
     }
 }

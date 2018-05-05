@@ -320,6 +320,7 @@ documentation/build/asciidoc/html5/notes.html
 * Запуск/останов/уборка БД, Zookeeper, Kafka, Dataflow, мониторинг и Swagger в Docker-е
 [source]
 ----
+docker swarm init
 docker stack deploy -c docker-stack.dev.db.yml vg
 docker stack deploy -c docker-stack.dev.stream.yml vg
 docker stack deploy -c docker-stack.dev.core.yml vg

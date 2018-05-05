@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.cloud:spring-cloud-starter-config'
@@ -11,8 +13,19 @@ bootRun {
     ]
 }
 
-dockerRun {
-    ports '8084'
-    command 'swagger',
-            '-Dspring.cloud.config.enabled=false'
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/swagger:latest'
+    buildArgs = [
+            'VG_VERSION': version,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/docker'
+            from "$project.buildDir/libs"
+            into "$buildDir/docker"
+        }
+    }
 }

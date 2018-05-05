@@ -5,7 +5,7 @@ volumes:
 
 services:
   h2:
-    image: gurv/vg-h2:latest
+    image: vg/h2:latest
     volumes:
       - h2:/opt/h2-data
     ports:

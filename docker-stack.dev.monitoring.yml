@@ -8,7 +8,7 @@ volumes:
 
 services:
   grafana:
-    image: gurv/vg-grafana:latest
+    image: vg/grafana:latest
     ports:
       - "3000:3000"
     environment:
@@ -30,7 +30,7 @@ services:
           memory: 64M
 
   prometheus:
-    image: gurv/vg-prometheus:latest
+    image: vg/prometheus:latest
     ports:
       - "9090:9090"
     volumes:

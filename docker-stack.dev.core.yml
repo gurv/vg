@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   config:
-    image: gurv/vg-config:latest
+    image: vg/config:latest
     ports:
       - "8888:8888"
     deploy:
@@ -13,7 +13,7 @@ services:
           - node.role == manager
 
   auth:
-    image: gurv/vg-auth:latest
+    image: vg/auth:latest
     ports:
       - "5000:8080"
     deploy:
@@ -24,7 +24,7 @@ services:
           - node.role == manager
 
   account:
-    image: gurv/vg-account:latest
+    image: vg/account:latest
     ports:
       - "8081:8081"
     deploy:
@@ -35,7 +35,7 @@ services:
           - node.role == manager
 
   gateway:
-    image: gurv/vg-gateway:latest
+    image: vg/gateway:latest
     ports:
       - "10000:10000"
     deploy:
@@ -46,7 +46,7 @@ services:
           - node.role == manager
 
   dataflow:
-    image: gurv/vg-dataflow:latest
+    image: vg/dataflow:latest
     ports:
       - "9393:9393"
     deploy:
@@ -57,7 +57,7 @@ services:
           - node.role == manager
 
   skipper:
-    image: gurv/vg-skipper:latest
+    image: vg/skipper:latest
     ports:
       - "7577:7577"
     deploy:
@@ -68,7 +68,7 @@ services:
           - node.role == manager
 
   swagger:
-    image: gurv/vg-swagger:latest
+    image: vg/swagger:latest
     ports:
       - "8084:8084"
     deploy:

@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 dependencies {
     extJar module("org.springframework.cloud:spring-cloud-dataflow-shell") {
         transitive = false
@@ -10,11 +12,19 @@ run {
 }
 run.dependsOn build
 
-docker {
-    buildArgs([VG_VERSION: version])
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/skipper-shell:latest'
+    buildArgs = [
+            'VG_VERSION': version,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/docker'
+            from "$project.buildDir/libs"
+            into "$buildDir/docker"
+        }
+    }
 }
-
-// Если на Windows 10 выполняется docker run -it , то ошибка: the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
-// Workaround: из cmd или терминала IDEA выполнить:
-// docker run -it -e --rm gurv/vg-skipper-shell:latest skipper-shell
-tasks['dockerRun'].enabled = false

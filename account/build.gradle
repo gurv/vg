@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
     compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
@@ -14,14 +16,19 @@ bootRun {
     ]
 }
 
-docker {
-    buildArgs([VG_VERSION: version])
-}
-
-dockerRun {
-    ports '8081'
-    command 'account',
-            '-Dspring.cloud.config.enabled=false',
-            '-Dspring.h2.console.enabled=true',
-            '-Dspring.h2.console.settings.web-allow-others=true'
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/account:latest'
+    buildArgs = [
+            'VG_VERSION': version,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/docker'
+            from "$project.buildDir/libs"
+            into "$buildDir/docker"
+        }
+    }
 }

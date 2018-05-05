@@ -1,19 +1,15 @@
 FROM openjdk:jre-alpine
 
-MAINTAINER $$maintainer$$
+ARG VG_VERSION=0.0.1
+ARG HOME=/opt/vg-config-$VG_VERSION
 
-VOLUME /tmp
+RUN mkdir /opt
+COPY *.jar $HOME/app.jar
+RUN touch $HOME/app.jar && \
+    ln -s $HOME /opt/vg-config
 
-COPY *.jar ./app.jar
-RUN [ \
-    "touch", \
-    "/app.jar" \
-    ]
-
-ENTRYPOINT [ "java" ]
-CMD [ \
-    "-Djava.security.egd=file:/dev/./urandom", \
-    "-jar", "/app.jar" \
-    ]
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 8888
+CMD ["config"]

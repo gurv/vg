@@ -1,4 +1,5 @@
-FROM zookeeper:3.4.11
+ARG ZOOKEEPER_VERSION=3.4.11
+FROM zookeeper:$ZOOKEEPER_VERSION
 
 # prometheus
 COPY prometheus.yml /usr/app/prometheus.yml

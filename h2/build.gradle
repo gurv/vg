@@ -1,3 +1,22 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    dockerFile file("$buildDir/docker/Dockerfile")
+    inputDir = file("$buildDir/docker")
+    tag = 'vg/h2:latest'
+    buildArgs = [
+            'H2_VERSION': rootProject.h2Version,
+    ]
+    doFirst {
+        copy {
+            from 'src/main/docker'
+            into "$project.buildDir/docker"
+        }
+    }
+}
+
+/*
 docker {
     buildArgs([H2_VERSION: h2Version])
 }
@@ -5,6 +24,7 @@ docker {
 dockerRun {
     ports '8083', '9093'
 }
+*/
 
 task dockerBackup(type: Exec) {
     commandLine "docker", "run",

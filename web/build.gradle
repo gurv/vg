@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 clean.doLast {
   exec {
     commandLine "cmd", "/c", "npm", "run", "dist-clean"
@@ -10,11 +12,9 @@ build.doLast {
   }
 }
 
-task dockerImage(type: Exec, overwrite: true) {
-  group = rootProject.dockerTaskGroup
+task buildImage(type: DockerBuildImage) {
   dependsOn build
-
-  commandLine "docker", "build",
-    "-t", project.dockerImageName,
-    "."
+  dockerFile file("$projectDir/Dockerfile")
+  inputDir = file("$projectDir")
+  tag = 'vg/web:latest'
 }
