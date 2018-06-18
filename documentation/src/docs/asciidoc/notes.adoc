@@ -192,23 +192,6 @@ API
 * Swagger
 http://localhost:8084/swagger-ui.html
 
-== WEB-приложение
-
-* Запуск в dev-режиме
-----
-npm run proxy-start
-----
-
-* Сборка (в каталог last-build)
-----
-npm run prod-build
-----
-
-* Удаление сборки
-----
-npm run dist-clean
-----
-
 == Разработчику
 
 * Инструменты

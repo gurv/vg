@@ -79,10 +79,6 @@ configure(rootProject) {
                 project(':skipper-shell'),
         ]
 
-        webProjects = [
-                project(':web'),
-        ]
-
         documentationProjects = [
                 project(':documentation'),
         ]
