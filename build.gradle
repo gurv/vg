@@ -72,8 +72,6 @@ configure(rootProject) {
                 project(':zookeeper'),
                 project(':prometheus'),
                 project(':grafana'),
-                project(':docker-cli'),
-                project(':docker-registry'),
                 project(':portainer'),
                 project(':dataflow-shell'),
                 project(':skipper-shell'),
