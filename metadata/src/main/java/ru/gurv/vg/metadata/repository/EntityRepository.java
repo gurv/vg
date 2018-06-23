@@ -2,11 +2,11 @@ package ru.gurv.vg.metadata.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import ru.gurv.vg.metadata.domain.EntityType;
+import ru.gurv.vg.metadata.domain.Entity;
 
 @Repository
-public interface EntityTypeRepository extends CrudRepository<EntityType, String> {
+public interface EntityRepository extends CrudRepository<Entity, String> {
 
-	EntityType findByCode(String code);
+	Entity findByCode(String code);
 
 }

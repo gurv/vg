@@ -1,15 +1,14 @@
 package ru.gurv.vg.metadata.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
- * Тип сущности
+ * Сущность
  */
-@Entity
-public class EntityType extends MetadataType {
+@javax.persistence.Entity
+public class Entity {
 
-    @Column(name = "code")
+    @Id
     private String code;
 
     public String getCode() {
