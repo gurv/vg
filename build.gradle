@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.1.RELEASE'
+        springBootVersion = '2.0.3.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -18,20 +18,20 @@ buildscript {
 
 configure(rootProject) {
     ext {
-        springCloudVersion = 'Finchley.M9'
-        springSecurityVersion = '5.0.4.RELEASE'
-        springSecurityOAuthVersion = '2.3.0.RELEASE'
+        springCloudVersion = 'Finchley.RC1'
+        springSecurityVersion = '5.0.6.RELEASE'
+        springSecurityOAuthVersion = '2.3.3.RELEASE'
         springSecurityJwtVersion = '1.0.9.RELEASE'
-        springCloudDataflowVersion = '1.4.0.RELEASE'
-        springCloudSkipperVersion = '1.0.2.RELEASE'
-        springfoxVersion = '2.8.0'
-        micrometerVersion = '1.0.3'
-        prometheusVersion = 'v2.2.1'
+        springCloudDataflowVersion = '1.5.1.RELEASE'
+        springCloudSkipperVersion = '1.0.4.RELEASE'
+        springfoxVersion = '2.9.2'
+        micrometerVersion = '1.0.5'
+        prometheusVersion = 'v2.3.1'
         prometheusWmiExporterVersion = '0.2.10'
-        grafanaVersion = '5.0.3'
+        grafanaVersion = '5.1.4'
         h2Version = '2017-06-10'
         groovyVersion = '2.4.7'
-        portainerVersion = '1.16.5'
+        portainerVersion = '1.18.1'
         alpineVersion = '3.7'
         dockerVersion = '18.03.1-ce'
         zookeeperVersion = '3.4.11'
@@ -173,6 +173,8 @@ configure(project.bootProjects) {
     }
 
     dependencies {
+        compile "org.springframework.boot:spring-boot-devtools"
+
         // monitoring
         compile "org.springframework.boot:spring-boot-starter-actuator"
         runtime 'io.micrometer:micrometer-registry-prometheus'

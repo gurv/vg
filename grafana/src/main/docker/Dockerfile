@@ -1,4 +1,4 @@
-ARG GRAFANA_VERSION=5.0.3
+ARG GRAFANA_VERSION=5.1.4
 FROM grafana/grafana:$GRAFANA_VERSION
 
 COPY grafana/datasources /etc/grafana/provisioning/datasources/

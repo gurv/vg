@@ -1,3 +1,10 @@
+spring:
+  livereload:
+    port: 35733
+  devtools:
+    restart:
+      log-condition-evaluation-delta: false
+
 management:
   endpoints:
     web:

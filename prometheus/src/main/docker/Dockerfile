@@ -1,4 +1,4 @@
-ARG PROMETHEUS_VERSION=5.0.3
+ARG PROMETHEUS_VERSION=v2.3.1
 FROM prom/prometheus:$PROMETHEUS_VERSION
 
 COPY prometheus /etc/prometheus/
