@@ -2,6 +2,9 @@ server:
   port: 8101
 spring:
   cloud:
+    refresh:
+      #TODO временное решение, ждем исправления https://github.com/spring-projects/spring-boot/issues/13042
+      refreshable: false
     stream:
       bindings:
         output:
@@ -21,8 +24,6 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
-      hbm2ddl:
-        auto: update
   h2:
     console:
       path: /db-console

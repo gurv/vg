@@ -20,7 +20,8 @@ spring:
       path: /db-console
   cloud:
     refresh:
-      enabled: false
+      #TODO временное решение, ждем исправления https://github.com/spring-projects/spring-boot/issues/13042
+      refreshable: false
 
 management:
   endpoints:
