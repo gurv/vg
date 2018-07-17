@@ -1,3 +1,0 @@
-= Zookeeper
-
-Сборка docker-образа https://zookeeper.apache.org/[Zookeeper]

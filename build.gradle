@@ -26,18 +26,9 @@ configure(rootProject) {
         springCloudSkipperVersion = '1.0.4.RELEASE'
         springfoxVersion = '2.9.2'
         micrometerVersion = '1.0.5'
-        prometheusVersion = 'v2.3.1'
-        prometheusWmiExporterVersion = '0.2.10'
-        grafanaVersion = '5.1.4'
-        h2Version = '2017-06-10'
         groovyVersion = '2.4.7'
-        portainerVersion = '1.18.1'
         alpineVersion = '3.7'
         dockerVersion = '18.03.1-ce'
-        zookeeperVersion = '3.4.11'
-        kafkaVersion = '1.1.0'
-
-        prometheusWmiExporter = findProperty('prometheusWmiExporter') ?: "C:/app/wmi_exporter-$prometheusWmiExporterVersion/wmi_exporter.exe"
 
         // проекты нв Spring Boot
         bootProjects = [
@@ -67,12 +58,6 @@ configure(rootProject) {
 
         // готовые загружаемые (например, из Docker Hub) docker-образы, в обертке этого проекта (напримеп, wurstmeister/kafka -> gurv/vg-kafka)
         dockerProjects = [
-                project(':h2'),
-                project(':kafka'),
-                project(':zookeeper'),
-                project(':prometheus'),
-                project(':grafana'),
-                project(':portainer'),
                 project(':dataflow-shell'),
                 project(':skipper-shell'),
         ]
@@ -239,23 +224,4 @@ configure(project.monitoringOldBootProjects) {
 
 configure(project.dockerProjects) {
     apply plugin: 'base'
-}
-
-task dockerMonitoringStart(type: Exec, overwrite: true) {
-    description = "Run monitoring"
-    group = rootProject.dockerTaskGroup
-
-    commandLine "docker-compose",
-            "-f", "docker-compose.dev.monitoring.yml",
-            "up",
-            "-d"
-}
-
-task dockerMonitoringStop(type: Exec, overwrite: true) {
-    description = "Stop monitoring"
-    group = rootProject.dockerTaskGroup
-
-    commandLine "docker-compose",
-            "-f", "docker-compose.dev.monitoring.yml",
-            "stop"
 }

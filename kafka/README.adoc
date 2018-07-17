@@ -1,3 +1,0 @@
-= Kafka
-
-Сборка docker-образа https://kafka.apache.org/[Kafka]
