@@ -16,20 +16,3 @@ bootRun {
             'spring.h2.console.enabled'  : true
     ]
 }
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    dockerFile file("$buildDir/docker/Dockerfile")
-    inputDir = file("$buildDir/docker")
-    tag = 'vg/sample-account:latest'
-    buildArgs = [
-            'VG_VERSION': version,
-    ]
-    doFirst {
-        copy {
-            from 'src/main/docker'
-            from "$project.buildDir/libs"
-            into "$buildDir/docker"
-        }
-    }
-}

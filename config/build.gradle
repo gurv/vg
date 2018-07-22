@@ -1,23 +1,4 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-config-server'
     compile 'io.springfox:springfox-swagger2'
-}
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    dockerFile file("$buildDir/docker/Dockerfile")
-    inputDir = file("$buildDir/docker")
-    tag = 'vg/config:latest'
-    buildArgs = [
-            'VG_VERSION': version,
-    ]
-    doFirst {
-        copy {
-            from 'src/main/docker'
-            from "$project.buildDir/libs"
-            into "$buildDir/docker"
-        }
-    }
 }

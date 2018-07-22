@@ -1,5 +1,3 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
@@ -22,21 +20,4 @@ bootRun {
             'spring.cloud.config.enabled': false,
             'spring.h2.console.enabled'  : true
     ]
-}
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    dockerFile file("$buildDir/docker/Dockerfile")
-    inputDir = file("$buildDir/docker")
-    tag = 'vg/auth:latest'
-    buildArgs = [
-            'VG_VERSION': version,
-    ]
-    doFirst {
-        copy {
-            from 'src/main/docker'
-            from "$project.buildDir/libs"
-            into "$buildDir/docker"
-        }
-    }
 }

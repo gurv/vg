@@ -16,20 +16,3 @@ task run(type: JavaExec, overwrite: true) {
     jvmArgs "-Dloader.config.location=application.yml"
     main = 'org.springframework.boot.loader.PropertiesLauncher'
 }
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    dockerFile file("$buildDir/docker/Dockerfile")
-    inputDir = file("$buildDir/docker")
-    tag = 'vg/skipper:latest'
-    buildArgs = [
-            'VG_VERSION': version,
-    ]
-    doFirst {
-        copy {
-            from 'src/main/docker'
-            from "$project.buildDir/libs"
-            into "$buildDir/docker"
-        }
-    }
-}

@@ -1,5 +1,3 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
@@ -10,21 +8,4 @@ bootRun {
     systemProperties = [
             'spring.cloud.config.enabled': false,
     ]
-}
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    dockerFile file("$buildDir/docker/Dockerfile")
-    inputDir = file("$buildDir/docker")
-    tag = 'vg/gateway:latest'
-    buildArgs = [
-            'VG_VERSION': version,
-    ]
-    doFirst {
-        copy {
-            from 'src/main/docker'
-            from "$project.buildDir/libs"
-            into "$buildDir/docker"
-        }
-    }
 }

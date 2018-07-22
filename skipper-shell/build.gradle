@@ -11,20 +11,3 @@ run {
     jvmArgs "-jar",  "$buildDir/libs/spring-cloud-skipper-shell-${rootProject.springCloudSkipperVersion}.jar"
 }
 run.dependsOn build
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    dockerFile file("$buildDir/docker/Dockerfile")
-    inputDir = file("$buildDir/docker")
-    tag = 'vg/skipper-shell:latest'
-    buildArgs = [
-            'VG_VERSION': version,
-    ]
-    doFirst {
-        copy {
-            from 'src/main/docker'
-            from "$project.buildDir/libs"
-            into "$buildDir/docker"
-        }
-    }
-}

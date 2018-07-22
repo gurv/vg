@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 buildscript {
     ext {
         springBootVersion = '2.0.3.RELEASE'
@@ -129,7 +131,17 @@ configure(subprojects.findAll {it.subprojects.size() == 0 }) {
     }
 
     docker {
-        url = 'tcp://192.168.1.33:2375'
+        url = 'tcp://192.168.1.33:2373'
+    }
+
+    task buildImage(type: DockerBuildImage) {
+        dependsOn build
+        dockerFile file("src/main/docker/Dockerfile")
+        inputDir = file(".")
+        tag = "vg/${project.name}:latest"
+        buildArgs = [
+                'VG_VERSION': version,
+        ]
     }
 }
 
@@ -217,7 +229,7 @@ configure(project.monitoringOldBootProjects) {
     build.doLast {
         copy {
             from configurations.monitoringOldBoot
-            into "$buildDir/libs/monitoring"
+            into "$buildDir/monitoring"
         }
     }
 }
