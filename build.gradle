@@ -40,8 +40,6 @@ configure(rootProject) {
                 project(':auth'),
                 project(':account'),
                 project(':metadata'),
-                project(':sample:operation'),
-                project(':sample:account'),
         ]
 
         // готовые загружаемые (например, из Maven Central) jar-сборки проектов нв Spring Boot
