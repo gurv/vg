@@ -7,7 +7,7 @@ pluginManagement {
 
 enableFeaturePreview('IMPROVED_POM_SUPPORT')
 
-rootProject.name = 'vg'
+rootProject.name = 'vg-core'
 
 include 'swagger'
 include 'config'
