@@ -1,13 +1,15 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 dependencies {
-    extJar module("org.springframework.cloud:spring-cloud-dataflow-shell") {
+    extJar implementation("org.springframework.cloud:spring-cloud-dataflow-shell") {
         transitive = false
     }
 }
 
+//FIXME не сработает. Какой?
+mainClassName = "org.springframework.cloud.dataflow.shell.???"
+
 run {
     standardInput = System.in
-    jvmArgs "-jar",  "$buildDir/libs/spring-cloud-dataflow-shell-${rootProject.springCloudDataflowVersion}.jar"
+    //FIXME не сработает. Как определить имя файла версии?
+    jvmArgs "-jar",  "$buildDir/libs/spring-cloud-dataflow-shell.jar"
 }
 run.dependsOn build

@@ -1,117 +1,47 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
-buildscript {
-    ext {
-        springBootVersion = '2.0.3.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url 'http://repo.spring.io/plugins-release' }
-        maven { url "https://plugins.gradle.org/m2" }
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21")
-        classpath("com.bmuschko:gradle-docker-plugin:3.2.4")
-    }
+plugins {
+    id 'org.springframework.boot' version '2.0.3.RELEASE' apply false
+    id 'com.bmuschko.docker-remote-api' version '3.4.4' apply false
+    id 'com.gorylenko.gradle-git-properties' version '1.5.1' apply false
 }
 
-configure(rootProject) {
-    ext {
-        springCloudVersion = 'Finchley.RC1'
-        springSecurityVersion = '5.0.6.RELEASE'
-        springSecurityOAuthVersion = '2.3.3.RELEASE'
-        springSecurityJwtVersion = '1.0.9.RELEASE'
-        springCloudDataflowVersion = '1.5.1.RELEASE'
-        springCloudSkipperVersion = '1.0.4.RELEASE'
-        springfoxVersion = '2.9.2'
-        micrometerVersion = '1.0.5'
-        groovyVersion = '2.4.7'
-        alpineVersion = '3.7'
-        dockerVersion = '18.03.1-ce'
+group = 'ru.gurv.vg'
+version = '0.1.0'
 
-        // проекты нв Spring Boot
-        bootProjects = [
-                project(':swagger'),
-                project(':config'),
-                project(':gateway'),
-                project(':auth'),
-                project(':account'),
-                project(':metadata'),
-        ]
+ext {
+    bomVersion = '0.2.0'
 
-        // готовые загружаемые (например, из Maven Central) jar-сборки проектов нв Spring Boot
-        bootJarProjects = [
-                project(':skipper'),
-                project(':skipper-shell'),
-                project(':dataflow'),
-                project(':dataflow-shell'),
-        ]
+    // проекты нв Spring Boot
+    bootProjects = [
+            project(':swagger'),
+            project(':config'),
+            project(':gateway'),
+            project(':auth'),
+            project(':account'),
+            project(':metadata'),
+            project(':skipper'),
+            project(':skipper-shell'),
+            project(':dataflow'),
+            project(':dataflow-shell'),
+    ]
 
-        // monitoring & spring boot 1.5
-        monitoringOldBootProjects = [
-                project(':dataflow'),
-                project(':skipper'),
-        ]
+    // проекты нв Spring Boot загружаемые, например, из Maven Central
+    bootReadyProjects = [
+            project(':skipper'),
+            project(':skipper-shell'),
+            project(':dataflow'),
+            project(':dataflow-shell'),
+    ]
 
-        // готовые загружаемые (например, из Docker Hub) docker-образы, в обертке этого проекта (напримеп, wurstmeister/kafka -> gurv/vg-kafka)
-        dockerProjects = [
-                project(':dataflow-shell'),
-                project(':skipper-shell'),
-        ]
-
-        applicationTaskGroup = 'application'
-        dockerTaskGroup = 'docker'
-    }
-
-    task upDockerCompose(type: Exec) {
-        group = rootProject.dockerTaskGroup
-
-        commandLine "docker-compose", "up"
-    }
+    // monitoring & spring boot 1.5
+    monitoringOldBootProjects = [
+            project(':dataflow'),
+            project(':skipper'),
+    ]
 }
 
-configure(subprojects) {
+subprojects {
     apply plugin: 'base'
-
-    ext {
-        buildNoString = project.hasProperty('buildNo') ? "${buildNo}" : "0.1.0"
-    }
-
-    group = 'ru.gurv.vg'
-    version = buildNoString
-}
-
-configure(subprojects.findAll {it.subprojects.size() == 0 }) {
-
-    apply plugin: 'io.spring.dependency-management'
-
-    repositories {
-        mavenCentral()
-        maven { url "https://repo.spring.io/milestone" }
-        jcenter()
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.security:spring-security-bom:$rootProject.springSecurityVersion"
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$rootProject.springCloudVersion"
-        }
-        dependencies {
-            dependency "org.springframework.cloud:spring-cloud-skipper-server:$rootProject.springCloudSkipperVersion"
-            dependency "org.springframework.cloud:spring-cloud-skipper-shell:$rootProject.springCloudSkipperVersion"
-            dependency "org.springframework.cloud:spring-cloud-starter-dataflow-server-local:$rootProject.springCloudDataflowVersion"
-            dependency "org.springframework.cloud:spring-cloud-dataflow-server-local:$rootProject.springCloudDataflowVersion"
-            dependency "org.springframework.cloud:spring-cloud-dataflow-shell:$rootProject.springCloudDataflowVersion"
-            dependency "org.springframework.security.oauth:spring-security-oauth2:$rootProject.springSecurityOAuthVersion"
-            dependency "org.springframework.security:spring-security-jwt:$rootProject.springSecurityJwtVersion"
-            dependency "io.springfox:springfox-swagger-ui:$rootProject.springfoxVersion"
-            dependency "io.springfox:springfox-swagger2:$rootProject.springfoxVersion"
-            dependency "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerVersion"
-        }
-    }
+    apply plugin: 'com.bmuschko.docker-remote-api'
 
     ext {
         dockerImageName = "gurv/${rootProject.name}-${project.path.substring(1).replace(':', '-')}:latest"
@@ -119,20 +49,25 @@ configure(subprojects.findAll {it.subprojects.size() == 0 }) {
         dockerImageBuildArgs = []
     }
 
-    apply plugin: 'com.bmuschko.docker-remote-api'
-
-    // https://github.com/bmuschko/gradle-docker-plugin/issues/467#issuecomment-353865846
-    dependencies {
-        dockerJava 'com.github.docker-java:docker-java:3.1.0-rc-2'
-        dockerJava 'org.slf4j:slf4j-simple:1.7.5'
-        dockerJava 'cglib:cglib:3.2.0'
-    }
-
     docker {
         url = 'tcp://192.168.1.33:2373'
     }
 
-    task buildImage(type: DockerBuildImage) {
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        //TODO https://github.com/bmuschko/gradle-docker-plugin/issues/467#issuecomment-353865846
+        dockerJava 'com.github.docker-java:docker-java'
+        dockerJava 'org.slf4j:slf4j-simple'
+        dockerJava 'cglib:cglib'
+    }
+
+    task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
         dependsOn build
         dockerFile file("src/main/docker/Dockerfile")
         inputDir = file(".")
@@ -143,7 +78,6 @@ configure(subprojects.findAll {it.subprojects.size() == 0 }) {
     }
 }
 
-//TODO убрать в файл bootProjects.gradle
 configure(project.bootProjects) {
     apply plugin: 'java'
     apply plugin: 'groovy'
@@ -159,8 +93,12 @@ configure(project.bootProjects) {
     sourceCompatibility = '1.8'
 
     bootJar {
-        baseName = rootProject.name + '-' + baseName
+        baseName = "${rootProject.name}-${baseName}"
         excludeDevtools = true
+    }
+
+    bootRun {
+        systemProperty 'spring.cloud.stream.kafka.binder.brokers', 'localhost:9092'
     }
 
     springBoot {
@@ -168,16 +106,22 @@ configure(project.bootProjects) {
     }
 
     dependencies {
-        compile "org.springframework.boot:spring-boot-devtools"
+        // BOM-файл проекта (Maven-like dependency management)
+        implementation "ru.gurv.vg:vg-dependencies:${rootProject.bomVersion}"
+
+        implementation "org.springframework.boot:spring-boot-devtools"
+        implementation "org.codehaus.groovy:groovy-all"
 
         // monitoring
-        compile "org.springframework.boot:spring-boot-starter-actuator"
-        runtime 'io.micrometer:micrometer-registry-prometheus'
+        implementation "org.springframework.boot:spring-boot-starter-actuator"
+        implementation 'io.micrometer:micrometer-registry-prometheus'
 
-        // groovy
-        compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+        //TODO https://github.com/gradle/gradle/issues/4979
+        implementation ('org.yaml:snakeyaml:1.19') {
+            force = true
+        }
 
-        testCompile "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
     }
 
     tasks.withType(Test) {
@@ -185,15 +129,17 @@ configure(project.bootProjects) {
                 'spring.cloud.config.enabled': false,
         ]
     }
-
-    bootRun {
-        systemProperty 'spring.cloud.stream.kafka.binder.brokers', 'localhost:9092'
-    }
 }
 
-configure(project.bootJarProjects) {
+configure(project.bootReadyProjects) {
+    apply plugin: 'application'
+
     configurations {
         extJar
+    }
+
+    dependencies {
+        extJar "ru.gurv.vg:vg-dependencies:${rootProject.bomVersion}"
     }
 
     build.doLast {
@@ -208,8 +154,6 @@ configure(project.bootJarProjects) {
         }
     }
 
-    apply plugin: 'application'
-
     // Отключение ненужных задач
     [jar, startScripts, distZip, distTar].each { it.enabled = false }
 }
@@ -220,8 +164,9 @@ configure(project.monitoringOldBootProjects) {
     }
 
     dependencies {
-        monitoringOldBoot "io.micrometer:micrometer-spring-legacy:$rootProject.micrometerVersion"
-        monitoringOldBoot "io.micrometer:micrometer-registry-prometheus:$rootProject.micrometerVersion"
+        monitoringOldBoot "ru.gurv.vg:vg-dependencies:${rootProject.bomVersion}"
+        monitoringOldBoot "io.micrometer:micrometer-spring-legacy"
+        monitoringOldBoot "io.micrometer:micrometer-registry-prometheus"
     }
 
     build.doLast {
@@ -230,8 +175,4 @@ configure(project.monitoringOldBootProjects) {
             into "$buildDir/monitoring"
         }
     }
-}
-
-configure(project.dockerProjects) {
-    apply plugin: 'base'
 }

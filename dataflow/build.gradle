@@ -1,5 +1,5 @@
 dependencies {
-    extJar module("org.springframework.cloud:spring-cloud-dataflow-server-local") {
+    extJar implementation("org.springframework.cloud:spring-cloud-dataflow-server-local") {
         transitive = false
     }
 }
@@ -9,7 +9,8 @@ mainClassName = "org.springframework.cloud.dataflow.server.local.LocalDataFlowSe
 task run(type: JavaExec, overwrite: true) {
     dependsOn build
     workingDir "$buildDir/libs"
-    classpath files("$buildDir/libs/spring-cloud-dataflow-server-local-${rootProject.springCloudDataflowVersion}.jar")
+    //FIXME не сработает. Как определить имя файла версии?
+    classpath files("$buildDir/libs/spring-cloud-dataflow-server-local.jar")
     jvmArgs "-Dloader.path=monitoring"
     jvmArgs "-Dloader.config.location=application.yml"
     jvmArgs "-Dspring.cloud.config.enabled=false"
