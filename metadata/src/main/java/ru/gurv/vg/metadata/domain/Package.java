@@ -4,16 +4,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
- * Атрибут
+ * Пакет
  */
 @Entity
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Attribute {
+public class Package {
 
     @Id
     @GeneratedValue
@@ -24,8 +27,5 @@ public class Attribute {
     String name;
 
     @ManyToOne
-    EntityType entityType;
-
-    @Enumerated(EnumType.STRING)
-    AttributeType attributeType;
+    Package parentPackage;
 }
