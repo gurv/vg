@@ -4,6 +4,8 @@ plugins {
     id 'com.gorylenko.gradle-git-properties' version '1.5.1' apply false
 }
 
+apply plugin: 'idea'
+
 group = 'ru.gurv.vg'
 version = '0.1.0'
 
