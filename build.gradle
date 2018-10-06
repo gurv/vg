@@ -141,10 +141,12 @@ configure(project.bootReadyProjects) {
     }
 
     build.doLast {
+/*
         copy {
             from configurations.extJar
             into "$buildDir/libs"
         }
+*/
 
         copy {
             from "$project.buildDir/resources/main"

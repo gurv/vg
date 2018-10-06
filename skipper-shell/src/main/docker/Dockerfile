@@ -4,7 +4,7 @@ ARG VG_VERSION=0.0.1
 ARG HOME=/opt/vg-skipper-shell-$VG_VERSION
 
 RUN mkdir /opt
-COPY build/libs/*.jar $HOME/app.jar
+COPY build/libs/vg-skipper-shell.jar $HOME/app.jar
 RUN touch $HOME/app.jar && \
     ln -s $HOME /opt/vg-skipper-shell
 
