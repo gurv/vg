@@ -11,7 +11,7 @@ group = 'ru.gurv.vg'
 version = '0.1.0'
 
 ext {
-    bomVersion = '0.3.0'
+    bomVersion = '0.4.0-SNAPSHOT'
 
     // проекты нв Spring Boot
     bootProjects = [
