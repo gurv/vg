@@ -1,6 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.0.3.RELEASE' apply false
-    id 'com.bmuschko.docker-remote-api' version '3.4.4' apply false
+    id 'com.bmuschko.docker-remote-api' version '3.6.1' apply false
     id 'com.gorylenko.gradle-git-properties' version '1.5.1' apply false
     id "org.sonarqube" version "2.6.2" apply false
 }
@@ -61,13 +61,6 @@ subprojects {
         maven { url "https://repo.spring.io/milestone" }
         jcenter()
         mavenLocal()
-    }
-
-    dependencies {
-        //TODO https://github.com/bmuschko/gradle-docker-plugin/issues/467#issuecomment-353865846
-        dockerJava 'com.github.docker-java:docker-java'
-        dockerJava 'org.slf4j:slf4j-simple'
-        dockerJava 'cglib:cglib'
     }
 
     task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
