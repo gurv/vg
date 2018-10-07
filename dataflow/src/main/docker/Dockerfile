@@ -10,6 +10,8 @@ RUN touch /opt/vg-dataflow-$VG_VERSION/app.jar && \
     ln -s /opt/vg-dataflow-$VG_VERSION /opt/vg-dataflow
 
 COPY src/main/docker/docker-entrypoint.sh /usr/local/bin/
+RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
+    && ln -s /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 9393
