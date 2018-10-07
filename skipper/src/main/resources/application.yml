@@ -1,4 +1,4 @@
-﻿management:
+management:
     security:
         enabled: false
     endpoints:
