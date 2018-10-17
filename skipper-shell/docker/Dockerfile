@@ -1,17 +1,16 @@
 FROM openjdk:jre-alpine
 
 ARG VG_VERSION=0.0.1
-ARG HOME=/opt/vg-metadata-$VG_VERSION
+ARG HOME=/opt/vg-skipper-shell-$VG_VERSION
 
 RUN mkdir /opt
-COPY build/libs/vg-metadata.jar $HOME/app.jar
+COPY build/libs/vg-skipper-shell.jar $HOME/app.jar
 RUN touch $HOME/app.jar && \
-    ln -s $HOME /opt/vg-metadata
+    ln -s $HOME /opt/vg-skipper-shell
 
-COPY src/main/docker/docker-entrypoint.sh /usr/local/bin/
+COPY docker/docker-entrypoint.sh /usr/local/bin/
 RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
     && ln -s /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-EXPOSE 8082
-CMD ["metadata"]
+CMD ["skipper-shell"]
