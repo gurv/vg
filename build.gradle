@@ -11,7 +11,7 @@ group = 'ru.gurv.vg'
 version = '0.1.0'
 
 ext {
-    bomVersion = '0.4.0-SNAPSHOT'
+    bomVersion = '0.1.0-SNAPSHOT'
 
     // проекты нв Spring Boot
     bootProjects = [
@@ -57,6 +57,7 @@ subprojects {
         maven { url "https://repo.spring.io/milestone" }
         jcenter()
         mavenLocal()
+        maven { url "https://oss.sonatype.org/service/local/repositories/snapshots/content/" }
     }
 
     docker {
@@ -107,7 +108,7 @@ configure(project.bootProjects) {
 
     dependencies {
         // BOM-файл проекта (Maven-like dependency management)
-        implementation "ru.gurv.vg:vg-dependencies:${rootProject.bomVersion}"
+        implementation "io.github.gurv:vg-dependencies:${rootProject.bomVersion}"
 
         implementation "org.springframework.boot:spring-boot-devtools"
         implementation "org.codehaus.groovy:groovy-all"
@@ -139,7 +140,7 @@ configure(project.bootReadyProjects) {
     }
 
     dependencies {
-        extJar "ru.gurv.vg:vg-dependencies:${rootProject.bomVersion}"
+        extJar "io.github.gurv:vg-dependencies:${rootProject.bomVersion}"
     }
 
     build.doLast {
@@ -166,7 +167,7 @@ configure(project.monitoringOldBootProjects) {
     }
 
     dependencies {
-        monitoringOldBoot "ru.gurv.vg:vg-dependencies:${rootProject.bomVersion}"
+        monitoringOldBoot "io.github.gurv:vg-dependencies:${rootProject.bomVersion}"
         monitoringOldBoot "io.micrometer:micrometer-spring-legacy"
         monitoringOldBoot "io.micrometer:micrometer-registry-prometheus"
     }
