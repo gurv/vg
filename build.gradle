@@ -7,8 +7,8 @@ plugins {
 
 apply plugin: 'idea'
 
-group = 'ru.gurv.vg'
-version = '0.1.0'
+group = 'io.github.gurv'
+version = '0.1.0-SNAPSHOT'
 
 ext {
     bomVersion = '0.1.0-SNAPSHOT'
@@ -90,11 +90,13 @@ configure(project.bootProjects) {
     //apply plugin: 'com.gorylenko.gradle-git-properties'
     apply plugin: 'org.sonarqube'
     apply plugin: 'jacoco'
+    apply plugin: 'maven-publish'
 
     sourceCompatibility = '1.8'
 
     bootJar {
         baseName = "vg-${baseName}"
+        version = rootProject.version
         excludeDevtools = true
     }
 
@@ -129,6 +131,53 @@ configure(project.bootProjects) {
         systemProperties = [
                 'spring.cloud.config.enabled': false,
         ]
+    }
+
+    publishing {
+        publications {
+            bootJava(MavenPublication) {
+                artifact bootJar
+                groupId = rootProject.group
+                artifactId = "vg-${project.name}"
+                version = rootProject.version
+                pom {
+                    name = project.name
+                    url = 'https://gurv.github.io/vg-doc/index.html'
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'hhttp://www.opensource.org/licenses/mit-license.php'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'gurv'
+                            name = 'Vladimir Gurinovich'
+                            email = 'vladimir.gurinovich@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/gurv/vg-core.git'
+                        developerConnection = 'scm:git:ssh://github.com/gurv/vg-core.git'
+                    }
+                }
+            }
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name = 'ci'
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+                url = rootProject.bomVersion.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username System.env.CI_DEPLOY_USERNAME
+                    password System.env.CI_DEPLOY_PASSWORD
+                }
+            }
+        }
     }
 }
 
