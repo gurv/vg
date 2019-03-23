@@ -65,16 +65,6 @@ subprojects {
         certPath = System.env.DOCKER_CERT_PATH ? new File(System.env.DOCKER_CERT_PATH) : certPath
         apiVersion = System.env.DOCKER_API_VERSION ?: apiVersion
     }
-
-    task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
-        dependsOn build
-        dockerFile file("docker/Dockerfile")
-        inputDir = file(".")
-        tag = "vg/${project.name}:latest"
-        buildArgs = [
-                'VG_VERSION': version,
-        ]
-    }
 }
 
 configure(project.bootProjects) {
@@ -180,6 +170,17 @@ configure(project.bootProjects) {
                 }
             }
         }
+    }
+
+    task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+        dependsOn build
+        dockerFile file("docker/Dockerfile")
+        inputDir = file(".")
+        tag = "vg/${project.name}:latest"
+        buildArgs = [
+                'VG_VERSION': version,
+                'JAR_FILE': "build/libs/vg-${project.name}-${project.rootProject.version}.jar",
+        ]
     }
 }
 
