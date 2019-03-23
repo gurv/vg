@@ -14,7 +14,6 @@ version = '0.1.0-SNAPSHOT'
 ext {
     bomVersion = '0.1.0-SNAPSHOT'
 
-    // проекты нв Spring Boot
     bootProjects = [
             project(':swagger'),
             project(':config'),
@@ -28,7 +27,6 @@ ext {
             project(':dataflow-shell'),
     ]
 
-    // проекты нв Spring Boot загружаемые, например, из Maven Central
     bootReadyProjects = [
             project(':skipper'),
             project(':skipper-shell'),
@@ -109,8 +107,6 @@ configure(project.bootProjects) {
     dependencies {
         implementation "org.springframework.boot:spring-boot-devtools"
         implementation "org.codehaus.groovy:groovy-all"
-
-        // monitoring
         implementation "org.springframework.boot:spring-boot-starter-actuator"
         implementation 'io.micrometer:micrometer-registry-prometheus'
 
@@ -196,20 +192,12 @@ configure(project.bootReadyProjects) {
     }
 
     build.doLast {
-/*
-        copy {
-            from configurations.extJar
-            into "$buildDir/libs"
-        }
-*/
-
         copy {
             from "$project.buildDir/resources/main"
             into "$project.buildDir/libs"
         }
     }
 
-    // Отключение ненужных задач
     [jar, startScripts, distZip, distTar].each { it.enabled = false }
 }
 
