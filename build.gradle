@@ -133,6 +133,8 @@ configure(project.bootProjects) {
         ]
     }
 
+    //FIXME не работает gradle publish
+    //    Invalid publication 'maven': artifact file does not exist: '/opt/prj/vg-core/account/build/libs/account.jar'
     publishing {
         publications {
             bootJava(MavenPublication) {
