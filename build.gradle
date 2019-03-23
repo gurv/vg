@@ -114,11 +114,6 @@ configure(project.bootProjects) {
         implementation "org.springframework.boot:spring-boot-starter-actuator"
         implementation 'io.micrometer:micrometer-registry-prometheus'
 
-        //TODO https://github.com/gradle/gradle/issues/4979
-        implementation ('org.yaml:snakeyaml:1.19') {
-            force = true
-        }
-
         testImplementation "org.springframework.boot:spring-boot-starter-test"
     }
 
