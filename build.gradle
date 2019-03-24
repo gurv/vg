@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.0.3.RELEASE' apply false
     id "io.spring.dependency-management" version "1.0.7.RELEASE" apply false
-    id 'com.bmuschko.docker-remote-api' version '3.6.1' apply false
+    id 'com.bmuschko.docker-remote-api' version '4.6.2' apply false
     id 'com.gorylenko.gradle-git-properties' version '1.5.1' apply false
     id "org.sonarqube" version "2.6.2" apply false
 }
@@ -10,6 +10,9 @@ apply plugin: 'idea'
 
 group = 'io.github.gurv'
 version = '0.1.0-SNAPSHOT'
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 
 ext {
     bomVersion = '0.1.0-SNAPSHOT'
@@ -45,12 +48,6 @@ subprojects {
     apply plugin: 'base'
     apply plugin: 'com.bmuschko.docker-remote-api'
 
-    ext {
-        dockerImageName = "gurv/vg-${project.path.substring(1).replace(':', '-')}:latest"
-        dockerContainerName = "vg-${project.path.substring(1).replace(':', '-')}"
-        dockerImageBuildArgs = []
-    }
-
     repositories {
         mavenCentral()
         maven { url "https://repo.spring.io/milestone" }
@@ -59,10 +56,16 @@ subprojects {
         maven { url "https://oss.sonatype.org/service/local/repositories/snapshots/content/" }
     }
 
+    ext {
+        imageName = "gurv/vg-${project.name}:latest"
+    }
+
     docker {
-        url = System.env.DOCKER_HOST ?: findProperty('dockerHostUrl') ?: url
-        certPath = System.env.DOCKER_CERT_PATH ? new File(System.env.DOCKER_CERT_PATH) : certPath
-        apiVersion = System.env.DOCKER_API_VERSION ?: apiVersion
+        registryCredentials {
+            username = System.getenv('CI_DOCKER_USERNAME')
+            password = System.getenv('CI_DOCKER_PASSWORD')
+            email = 'vladimir.gurinovich@gmail.com'
+        }
     }
 }
 
@@ -168,15 +171,20 @@ configure(project.bootProjects) {
         }
     }
 
-    task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+    task buildImage(type: DockerBuildImage) {
         dependsOn build
-        dockerFile file("docker/Dockerfile")
+        dockerFile = file("docker/Dockerfile")
         inputDir = file(".")
-        tag = "vg/${project.name}:latest"
+        tags.add(imageName)
         buildArgs = [
                 'VG_VERSION': version,
-                'JAR_FILE': "build/libs/vg-${project.name}-${project.rootProject.version}.jar",
+                'JAR_FILE': "build/libs/vg-${project.name}-${rootProject.version}.jar",
         ]
+    }
+
+    task pushImage(type: DockerPushImage) {
+        dependsOn buildImage
+        imageName = project.imageName
     }
 }
 

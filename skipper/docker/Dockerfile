@@ -2,9 +2,10 @@ FROM openjdk:jre-alpine
 
 ARG VG_VERSION=0.0.1
 ARG HOME=/opt/vg-skipper-$VG_VERSION
+ARG JAR_FILE
 
 RUN mkdir /opt
-COPY build/libs/vg-skipper.jar $HOME/app.jar
+COPY $JAR_FILE $HOME/app.jar
 COPY build/libs/*.yml /opt/vg-skipper-$VG_VERSION
 COPY build/monitoring /opt/vg-skipper-$VG_VERSION/monitoring
 RUN touch $HOME/app.jar && \
