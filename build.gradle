@@ -182,6 +182,22 @@ configure(project.bootProjects) {
         ]
     }
 
+    sonarqube {
+        properties {
+            property "sonar.host.url", "https://sonarcloud.io"
+            property "sonar.organization", "gurv-github"
+            property "sonar.projectVersion", "${project.version}"
+            property "sonar.sources", "src"
+            property "sonar.java.binaries", "build/classes"
+            property "sonar.java.libraries", "build/libs/*.jar"
+            property "sonar.exclusions", "**/*Test*/**"
+            property "sonar.test.inclusions", "**/*Test*/**"
+            property "sonar.links.ci", "https://travis-ci.org/gurv/vg-core"
+            property "sonar.links.scm", "https://github.com/gurv/vg-core"
+            property "sonar.links.issue", "https://github.com/gurv/vg-core/issues"
+        }
+    }
+
     task pushImage(type: DockerPushImage) {
         dependsOn buildImage
         imageName = project.imageName
