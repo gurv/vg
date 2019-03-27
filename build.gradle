@@ -3,7 +3,7 @@ plugins {
     id "io.spring.dependency-management" version "1.0.7.RELEASE" apply false
     id 'com.bmuschko.docker-remote-api' version '4.6.2' apply false
     id 'com.gorylenko.gradle-git-properties' version '1.5.1' apply false
-    id "org.sonarqube" version "2.6.2" apply false
+    id "org.sonarqube" version "2.7" apply false
 }
 
 apply plugin: 'idea'
@@ -57,7 +57,7 @@ subprojects {
     }
 
     ext {
-        imageName = "gurv/vg-${project.name}:latest"
+        imageName = "gurv/${project.name}:latest"
     }
 
     docker {
@@ -129,7 +129,7 @@ configure(project.bootProjects) {
             bootJava(MavenPublication) {
                 artifact bootJar
                 groupId = rootProject.group
-                artifactId = "vg-${project.name}"
+                artifactId = "${project.name}"
                 version = rootProject.version
                 pom {
                     name = project.name
@@ -178,7 +178,7 @@ configure(project.bootProjects) {
         tags.add(imageName)
         buildArgs = [
                 'VG_VERSION': version,
-                'JAR_FILE': "build/libs/vg-${project.name}-${rootProject.version}.jar",
+                'JAR_FILE': "build/libs/${project.name}-${rootProject.version}.jar",
         ]
     }
 
