@@ -3,7 +3,9 @@ install: true
 jdk: oraclejdk8
 services:
   - docker
-script: ./gradlew build sonarqube publishBootJavaPublicationToCiRepository pushImage
+#FIXME pushImage
+#   Could not build image: COPY failed: stat /var/lib/docker/tmp/docker-builder156793750/build/libs/vg-account-0.1.0-SNAPSHOT.jar: no such file or directory
+script: ./gradlew build sonarqube publishBootJavaPublicationToCiRepository
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
