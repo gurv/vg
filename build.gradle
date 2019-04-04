@@ -88,7 +88,6 @@ configure(project.bootProjects) {
     sourceCompatibility = '1.8'
 
     bootJar {
-        baseName = "vg-${baseName}"
         version = rootProject.version
         excludeDevtools = true
     }
