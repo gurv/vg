@@ -1,1 +1,17 @@
-= Backend
+= Core Services
+
+== ./
+
+```
+./gradlew build
+# (vg-config)
+java -jar vg-config/build/libs/*.jar
+```
+
+== Docker
+
+```
+./gradlew buildImage
+# (vg-config)
+docker run -d gurv/vg-config
+```
