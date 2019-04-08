@@ -19,19 +19,19 @@ documentation:
     services:
       -
         name: "Config"
-        url: http://localhost:8888/v2/api-docs
+        url: http://config:8888/v2/api-docs
         version: 2.0
       -
         name: "Account"
-        url: http://localhost:8081/v2/api-docs
+        url: http://account:8081/v2/api-docs
         version: 2.0
       -
         name: "Auth"
-        url: http://localhost:5000/v2/api-docs
+        url: http://auth:5000/v2/api-docs
         version: 2.0
       -
         name: "Metadata"
-        url: http://localhost:8082/v2/api-docs
+        url: http://metadata:8082/v2/api-docs
         version: 2.0
       -
         name: "[sample] Operation"

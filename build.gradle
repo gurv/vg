@@ -18,29 +18,29 @@ ext {
     bomVersion = '0.1.0-SNAPSHOT'
 
     bootProjects = [
-            project(':vg-swagger'),
-            project(':vg-config'),
-            project(':vg-gateway'),
-            project(':vg-auth'),
-            project(':vg-account'),
-            project(':vg-metadata'),
-            project(':vg-skipper'),
-            project(':vg-skipper-shell'),
-            project(':vg-dataflow'),
-            project(':vg-dataflow-shell'),
+            project(':swagger'),
+            project(':config'),
+            project(':gateway'),
+            project(':auth'),
+            project(':account'),
+            project(':metadata'),
+            project(':skipper'),
+            project(':skipper-shell'),
+            project(':dataflow'),
+            project(':dataflow-shell'),
     ]
 
     bootReadyProjects = [
-            project(':vg-skipper'),
-            project(':vg-skipper-shell'),
-            project(':vg-dataflow'),
-            project(':vg-dataflow-shell'),
+            project(':skipper'),
+            project(':skipper-shell'),
+            project(':dataflow'),
+            project(':dataflow-shell'),
     ]
 
     // monitoring & spring boot 1.5
     monitoringOldBootProjects = [
-            project(':vg-dataflow'),
-            project(':vg-skipper'),
+            project(':dataflow'),
+            project(':skipper'),
     ]
 }
 

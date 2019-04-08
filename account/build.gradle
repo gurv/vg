@@ -8,8 +8,9 @@ dependencies {
 }
 
 bootRun {
-    systemProperties = [
-            'spring.cloud.config.enabled': false,
-            'spring.h2.console.enabled'  : true
-    ]
+    systemProperties =
+        [
+        'spring.cloud.config.enabled': false,
+        'spring.h2.console.enabled'  : true
+        ]
 }
