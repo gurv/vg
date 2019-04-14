@@ -3,7 +3,7 @@ set -ex
 
 if [ "$1" = 'config' ]; then
     shift
-    cd /opt/vg-config
+    cd /opt/config
     java \
         $JAVA_OPTS \
         -Djava.security.egd=file:/dev/./urandom \

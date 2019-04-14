@@ -1,13 +1,13 @@
 FROM openjdk:jre-alpine
 
-ARG VG_VERSION=0.1.0-SNAPSHOT
-ARG HOME=/opt/vg-account-$VG_VERSION
+ARG VG_VERSION
+ARG HOME=/opt/account-$VG_VERSION
 ARG JAR_FILE
 
 RUN mkdir /opt
 COPY $JAR_FILE $HOME/app.jar
 RUN touch $HOME/app.jar && \
-    ln -s $HOME /opt/vg-account
+    ln -s $HOME /opt/account
 
 COPY docker/docker-entrypoint.sh /usr/local/bin/
 RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \

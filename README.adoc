@@ -10,7 +10,7 @@ java -jar config/build/libs/*.jar
 
 # Docker
 ./gradlew config:buildImage
-docker run -d -p 8888:8888 gurv/config
+docker run -d -p 8888:8888 --env JAVA_OPTS="-XX:MaxRAM=128m" gurv/config
 ```
 
 == Documentation
