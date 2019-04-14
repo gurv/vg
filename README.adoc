@@ -3,20 +3,15 @@
 image:https://img.shields.io/travis/gurv/vg-core/master.svg[Build Status (Travis CI),link=https://travis-ci.org/gurv/vg-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=io.github.gurv:vg-core&metric=alert_status[Sonarcloud Status,link=https://sonarcloud.io/dashboard?id=io.github.gurv%3Avg-core]
 
-== ./
-
 ```
+# ./
 ./gradlew build
 # (vg-config)
 java -jar vg-config/build/libs/*.jar
-```
 
-== Docker
-
-```
-./gradlew buildImage
-# (vg-config)
-docker run -d gurv/vg-config
+# Docker
+./gradlew config:buildImage
+docker run -d -p 8888:8888 gurv/config
 ```
 
 == Documentation
