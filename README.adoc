@@ -6,8 +6,7 @@ image:https://sonarcloud.io/api/project_badges/measure?project=io.github.gurv:vg
 ```
 # ./
 ./gradlew build
-# (vg-config)
-java -jar vg-config/build/libs/*.jar
+java -jar config/build/libs/*.jar
 
 # Docker
 ./gradlew config:buildImage
