@@ -2,9 +2,14 @@
 
 image:https://img.shields.io/travis/gurv/vg-core/master.svg[Build Status (Travis CI),link=https://travis-ci.org/gurv/vg-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=io.github.gurv:vg-core&metric=alert_status[Sonarcloud Status,link=https://sonarcloud.io/dashboard?id=io.github.gurv%3Avg-core]
+image:https://img.shields.io/github/contributors/gurv/vg-core.svg[Contributors,link=https://github.com/gurv/vg-core/graphs/contributors]
+image:https://img.shields.io/github/commit-activity/m/gurv/vg-core.svg[Activity,link=https://github.com/gurv/vg-core/pulse]
+image:https://img.shields.io/github/repo-size/gurv/vg-core.svg[repo size]
+
+* https://gurv.github.io/vg-doc/index.html[Documentation]
 
 ```
-# ./
+# build / run
 ./gradlew build
 java -jar config/build/libs/*.jar
 
@@ -12,7 +17,3 @@ java -jar config/build/libs/*.jar
 ./gradlew config:buildImage
 docker run -d -p 8888:8888 --env JAVA_OPTS="-XX:MaxRAM=128m" gurv/config
 ```
-
-== Documentation
-
-https://gurv.github.io/vg-doc/index.html
