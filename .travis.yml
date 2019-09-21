@@ -1,6 +1,6 @@
 language: java
 install: true
-jdk: oraclejdk8
+jdk: oraclejdk11
 services:
 - docker
 script: ./gradlew build sonarqube publishBootJavaPublicationToCiRepository pushImage
