@@ -1,10 +1,10 @@
-FROM openjdk:jre-alpine
+FROM openjdk:11-jre-slim
 
 ARG VG_VERSION=0.0.1
 ARG HOME=/opt/dataflow-$VG_VERSION/
 ARG JAR_FILE
 
-RUN mkdir /opt
+
 COPY $JAR_FILE $HOME/app.jar
 COPY build/libs/*.yml $HOME
 COPY build/monitoring $HOME/monitoring

@@ -1,10 +1,9 @@
-FROM openjdk:jre-alpine
+FROM openjdk:11-jre-slim
 
 ARG VG_VERSION
 ARG HOME=/opt/gateway-$VG_VERSION
 ARG JAR_FILE
 
-RUN mkdir /opt
 COPY $JAR_FILE $HOME/app.jar
 RUN touch $HOME/app.jar && \
     ln -s $HOME /opt/gateway
