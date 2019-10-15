@@ -3,7 +3,7 @@ install: true
 jdk: oraclejdk11
 services:
 - docker
-script: ./gradlew build sonarqube publishBootJavaPublicationToCiRepository pushImage
+script: ./gradlew build sonarqube publishBootJavaPublicationToCiRepository pushImageToDockerHub
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
