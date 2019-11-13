@@ -17,7 +17,12 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 ext {
-    bomVersion = '0.2.0-SNAPSHOT'
+    // FIXME на этом
+    //      gradle test
+    // в проекте 'account' это
+    //      Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException
+    // ждем это https://github.com/springfox/springfox/issues/2932
+    bomVersion = '0.3.0-SNAPSHOT'
     
     email = 'vladimir.gurinovich@gmail.com'
     
@@ -126,6 +131,7 @@ configure(project.bootProjects) {
 
     dependencies {
         implementation 'org.springframework.boot:spring-boot-devtools'
+        implementation 'org.springframework.boot:spring-boot-starter-hateoas'
         implementation 'org.codehaus.groovy:groovy-all'
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'io.micrometer:micrometer-registry-prometheus'
