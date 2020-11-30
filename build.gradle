@@ -22,7 +22,7 @@ ext {
     email = 'vladimir.gurinovich@gmail.com'
     
     dockerhubRegistry = 'docker.io/gurv'
-    githubRegistry = 'docker.pkg.github.com/gurv/vg-core'
+    githubRegistry = 'ghcr.io/gurv/vg-core'
 
     bootProjects = [
             project(':swagger'),
@@ -149,7 +149,7 @@ configure(project.bootProjects) {
         }
     }
 
-    rootProject.tasks.sonarqube.dependsOn build
+    rootProject.tasks.sonarqube.dependsOn check
 
     //FIXME не работает gradle publish
     //    Invalid publication 'maven': artifact file does not exist: '/opt/prj/vg-core/account/build/libs/account.jar'
@@ -182,19 +182,24 @@ configure(project.bootProjects) {
                     }
                 }
             }
-            maven(MavenPublication) {
-                from components.java
-            }
         }
         repositories {
             maven {
-                name = 'ci'
+                name = 'OssSonatype'
                 def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
                 def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
                 url = rootProject.bomVersion.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
                 credentials {
-                    username System.env.CI_DEPLOY_USERNAME
-                    password System.env.CI_DEPLOY_PASSWORD
+                    username System.env.SONATYPE_USERNAME
+                    password System.env.SONATYPE_PASSWORD
+                }
+            }
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/gurv/vg-core")
+                credentials {
+                    username = System.env.GITHUB_USERNAME
+                    password = System.env.GITHUB_TOKEN
                 }
             }
         }
@@ -240,8 +245,8 @@ configure(project.bootProjects) {
         tag = project.imageVersion
         def credentials = new DockerRegistryCredentials(project.objects)
         credentials.url.set rootProject.dockerhubRegistry
-        credentials.username.set findProperty('dockerhubUsername') ?: System.getenv('CI_DOCKER_USERNAME')
-        credentials.password.set findProperty('dockerhubPassword') ?: System.getenv('CI_DOCKER_PASSWORD')
+        credentials.username.set findProperty('dockerhubUsername') ?: System.getenv('DOCKERHUB_USERNAME')
+        credentials.password.set findProperty('dockerhubPassword') ?: System.getenv('DOCKERHUB_TOKEN')
         registryCredentials = credentials
     }
 
@@ -259,9 +264,11 @@ configure(project.bootProjects) {
         def credentials = new DockerRegistryCredentials(project.objects)
         credentials.url.set rootProject.githubRegistry
         credentials.username.set findProperty('githubUsername') ?: System.getenv('GITHUB_USERNAME')
-        credentials.password.set findProperty('githubToken') ?: System.getenv('GITHUB_TOKEN')
+        credentials.password.set findProperty('githubToken') ?: System.getenv('CONTAINER_REGISTRY_PAT')
         registryCredentials = credentials
     }
+
+    project.tasks.publish.dependsOn pushImageToDockerHub, pushImageToGitHub
 }
 
 configure(project.bootReadyProjects) {
