@@ -91,14 +91,6 @@ configure(project.bootProjects) {
     apply plugin: 'groovy'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-    //FIXME сборка swagger-aggregate с ошибкой java.io.IOException: Not a ref: refs/remotes/origin/master
-    /*
-        gradle api-swagger-aggregate:build
-
-        возможно из за groovy в проекте api-swagger-aggregate
-     */
-    //apply plugin: 'com.gorylenko.gradle-git-properties'
-    apply plugin: 'org.sonarqube'
     apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
 
@@ -139,20 +131,29 @@ configure(project.bootProjects) {
         ]
     }
 
-    sonarqube {
-        properties {
-            property "sonar.sources", "${project.projectDir}/src"
-            property "sonar.java.binaries", "${project.projectDir}/build/classes"
-            property "sonar.java.libraries", "${project.projectDir}/build/libs/*.jar"
-            property "sonar.exclusions", "${project.projectDir}/**/*Test*/**"
-            property "sonar.test.inclusions", "${project.projectDir}/**/*Test*/**"
+    jacocoTestReport {
+        reports {
+            html.enabled true
+            html.destination file("${project.buildDir}/jacoco-html")
+            xml.enabled true
+            xml.destination file("${project.buildDir}/jacoco-xml/test.xml")
         }
     }
 
-    rootProject.tasks.sonarqube.dependsOn check
+    project.test.finalizedBy jacocoTestReport
 
-    //FIXME не работает gradle publish
-    //    Invalid publication 'maven': artifact file does not exist: '/opt/prj/vg-core/account/build/libs/account.jar'
+    sonarqube {
+        properties {
+            property "sonar.sources", "${project.projectDir}/src"
+            property "sonar.java.binaries", "${project.buildDir}/classes"
+            property "sonar.exclusions", "**/*Test*/**"
+            property "sonar.test.inclusions", "**/*Test*/**"
+            property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco-xml/test.xml"
+        }
+    }
+
+    rootProject.tasks.sonarqube.dependsOn test
+
     publishing {
         publications {
             bootJava(MavenPublication) {
@@ -202,22 +203,6 @@ configure(project.bootProjects) {
                     password = System.env.GITHUB_TOKEN
                 }
             }
-        }
-    }
-
-    sonarqube {
-        properties {
-            property "sonar.host.url", "https://sonarcloud.io"
-            property "sonar.organization", "gurv-github"
-            property "sonar.projectVersion", "${project.version}"
-            property "sonar.sources", "src"
-            property "sonar.java.binaries", "build/classes"
-            property "sonar.java.libraries", "build/libs/*.jar"
-            property "sonar.exclusions", "**/*Test*/**"
-            property "sonar.test.inclusions", "**/*Test*/**"
-            property "sonar.links.ci", "https://travis-ci.org/gurv/vg-core"
-            property "sonar.links.scm", "https://github.com/gurv/vg-core"
-            property "sonar.links.issue", "https://github.com/gurv/vg-core/issues"
         }
     }
 
@@ -290,6 +275,12 @@ configure(project.bootReadyProjects) {
     }
 
     [jar, startScripts, distZip, distTar].each { it.enabled = false }
+
+    sonarqube {
+        properties {
+            skipProject = true
+        }
+    }
 }
 
 configure(project.monitoringOldBootProjects) {
