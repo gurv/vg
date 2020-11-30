@@ -87,12 +87,14 @@ subprojects {
 }
 
 configure(project.bootProjects) {
-    apply plugin: 'java'
+    // apply plugin: 'java'
     apply plugin: 'groovy'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'jacoco'
+    // apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
+    apply plugin: 'myproject.java-conventions'
+    apply plugin: 'myproject.jacoco-aggregation'
 
     sourceCompatibility = 11
     targetCompatibility = 1.11
@@ -131,16 +133,16 @@ configure(project.bootProjects) {
         ]
     }
 
-    jacocoTestReport {
-        reports {
-            html.enabled true
-            html.destination file("${project.buildDir}/jacoco-html")
-            xml.enabled true
-            xml.destination file("${project.buildDir}/jacoco-xml/test.xml")
-        }
-    }
+    // jacocoTestReport {
+    //     reports {
+    //         html.enabled true
+    //         html.destination file("${project.buildDir}/jacoco-html")
+    //         xml.enabled true
+    //         xml.destination file("${project.buildDir}/jacoco-xml/test.xml")
+    //     }
+    // }
 
-    project.test.finalizedBy jacocoTestReport
+    // project.test.finalizedBy jacocoTestReport
 
     sonarqube {
         properties {
@@ -300,4 +302,9 @@ configure(project.monitoringOldBootProjects) {
             into "$buildDir/monitoring"
         }
     }
+}
+
+configure(rootProject) {
+    apply plugin: 'myproject.java-conventions'
+    apply plugin: 'myproject.jacoco-aggregation'
 }
